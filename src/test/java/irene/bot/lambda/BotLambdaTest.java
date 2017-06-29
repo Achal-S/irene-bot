@@ -1,17 +1,16 @@
-import com.google.gson.Gson;
-import irene.bot.lambda.BotLambda;
-import irene.bot.model.LexEvent;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+package irene.bot.lambda;
 
-import static org.junit.Assert.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import irene.bot.lambda.PositionLambda;
+import irene.bot.model.LexEvent;
+import irene.bot.model.Position;
+import org.junit.*;
 
 
 public class BotLambdaTest {
 
-    private BotLambda botLambda = new BotLambda();
+    private PositionLambda botLambda = new PositionLambda();
     private String input = "{\n" +
             "  \"currentIntent\": {\n" +
             "    \"name\": \"intent-name\",\n" +
@@ -48,11 +47,28 @@ public class BotLambdaTest {
 
     @Test
     @Ignore
-    public void testLambda(){
+    public void testLambda() {
         Gson gson = new Gson();
         LexEvent lexEvent = gson.fromJson(input, LexEvent.class);
 
         this.botLambda.handleRequest(lexEvent, null);
+    }
+
+    @Test
+    public void getPosition() throws Exception {
+        PositionLambda botLambda = new PositionLambda();
+        Position position = botLambda.retrieveVehiclePosition();
+        Assert.assertTrue(position.isSuccess());
+
+    }
+
+    @Test
+    public void deserializeTemperature() throws Exception {
+        String input = "{\"latitude\":45.812127836,\"longitude\":9.088960812,\"speed\":0.0,\"speedError\":68.57,\"success\":true}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Position position = objectMapper.readValue(input, Position.class);
+
     }
 
 }
