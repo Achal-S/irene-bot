@@ -1,4 +1,4 @@
-package irene.bot.model;
+package irene.bot.map.model;
 
 public class GeocodingResponse {
 

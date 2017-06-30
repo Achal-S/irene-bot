@@ -1,10 +1,8 @@
-package irene.bot.lambda;
+package irene.bot.embedded;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import irene.bot.lambda.PositionLambda;
-import irene.bot.model.LexEvent;
-import irene.bot.model.Position;
+import irene.bot.embedded.model.LexEvent;
+import irene.bot.embedded.model.Position;
 import org.junit.*;
 
 
@@ -65,10 +63,7 @@ public class BotLambdaTest {
     @Test
     public void deserializeTemperature() throws Exception {
         String input = "{\"latitude\":45.812127836,\"longitude\":9.088960812,\"speed\":0.0,\"speedError\":68.57,\"success\":true}";
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Position position = objectMapper.readValue(input, Position.class);
-
+        Gson gson = new Gson();
+        Position position = gson.fromJson(input, Position.class);
     }
-
 }

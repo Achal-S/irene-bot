@@ -1,8 +1,5 @@
-package irene.bot.model;
+package irene.bot.embedded.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Position {
 
     private double latitude;

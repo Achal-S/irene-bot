@@ -1,10 +1,10 @@
-package irene.bot.lambda;
+package irene.bot.embedded;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import irene.bot.embedded.model.*;
 import irene.bot.map.GeocodingService;
-import irene.bot.model.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -91,18 +91,18 @@ public class PositionLambda implements RequestHandler<LexEvent, LexResponse> {
     }
 
     private Position parsePositionResponse(String positionJSON) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Position position = objectMapper.readValue(positionJSON, Position.class);
+        Gson gson = new Gson();
+        Position position = gson.fromJson(positionJSON, Position.class);
         log.info("Position is: " + position);
         return position;
     }
 
 
     private String reverseGeoCode(Position position) {
-        return this.geocodingService.reverseGeocode(position).getAddress();
+        return this.geocodingService.reverseGeocode(position.getLatitude(), position.getLongitude()).getAddress();
     }
 
     private String getMapUrl(Position position) {
-        return this.geocodingService.getMapURL(position);
+        return this.geocodingService.getMapURL(position.getLatitude(), position.getLongitude());
     }
 }
