@@ -24,7 +24,7 @@ public class PositionLambda implements RequestHandler<LexEvent, LexResponse> {
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(PositionLambda.class);
     private static final String IRENE_EMBEDDED_BASE_URL = "http://34.203.111.203:4990/";
     private static final String POSITION_PATH = "position";
-    private static final int TIMEOUT = 5000;
+    private static final int TIMEOUT = 10000;
 
 
     private GeocodingService geocodingService = new GeocodingService();

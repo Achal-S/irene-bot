@@ -8,36 +8,29 @@ import io.swagger.client.api.ConversationsApi;
 import io.swagger.client.model.Activity;
 import io.swagger.client.model.ChannelAccount;
 import io.swagger.client.model.ConversationAccount;
+import io.swagger.client.model.ResourceResponse;
+import irene.bot.embedded.LexRuntimeService;
 import irene.bot.messaging.model.AuthenticationResponse;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
-public class MessageProcessorComponent {
+public class MessageProcessorService {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessageProcessorComponent.class);
-
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessageProcessorService.class);
 
     private AuthenticationService authenticationService = new AuthenticationService();
+    private LexRuntimeService lexRuntimeService = new LexRuntimeService();
 
-    private Queue<Activity> messages = new ArrayDeque<>();
-
-    public void enqueueMessage(Activity message) {
-        this.messages.add(message);
+    public String processMessage(Activity activity) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
+        log.info("Processing message: " + activity.getText());
+        String reply = lexRuntimeService.sendToBot(activity.getText(), activity.getFrom().getId());
+        return this.sendMessageToConversation(activity.getChannelId(), activity.getRecipient(), activity.getFrom(), activity.getServiceUrl(), reply, activity.getConversation().getId()).getId();
     }
 
-    public void processMessage() throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
-        if (!this.messages.isEmpty()) {
-            Activity message = this.messages.poll();
-            log.info("Processing message: "+message.getText());
-            this.sendMessageToConversation(message.getChannelId(), message.getRecipient(), message.getFrom(), message.getServiceUrl(), message.getText(), message.getConversation().getId());
-        }
-    }
 
-    private void sendMessageToConversation(String channelId, ChannelAccount fromAccount, ChannelAccount toAccount, String serviceUrl, String text, String conversationId) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
+    private ResourceResponse sendMessageToConversation(String channelId, ChannelAccount fromAccount, ChannelAccount toAccount, String serviceUrl, String text, String conversationId) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
         Activity echo = new Activity();
         echo.setFrom(fromAccount);
         echo.setType("message");
@@ -53,10 +46,11 @@ public class MessageProcessorComponent {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter()).create();
-        conversationsApi.conversationsSendToConversation(echo, conversationId);
+        return conversationsApi.conversationsSendToConversation(echo, conversationId);
     }
 
     private ApiClient instantiateApiClient(String urlBasePath) throws NoSuchFieldException, IllegalAccessException, IOException {
+        log.info("Starting authetication process");
         ApiClient apiClient = new ApiClient();
         AuthenticationResponse authenticationResponse = authenticationService.authenticate();
         apiClient.getHttpClient().networkInterceptors().add(chain -> {
