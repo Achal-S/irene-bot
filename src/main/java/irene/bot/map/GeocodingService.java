@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class GeocodingService {
 
-    static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GeocodingService.class);
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GeocodingService.class);
     private static final String GOOGLE_MAP_BASE_URL = "https://maps.google.com?q=";
     private static final String API_KEY = "api.key";
     private final String apiKey = ApplicationPropertiesUtil.getProperty(API_KEY, this.getClass());
@@ -46,8 +46,8 @@ public class GeocodingService {
         return geocodingResponse;
     }
 
-    public String getMapURL(double latitude, double longitude) {
-        StringBuilder stringBuilder = new StringBuilder(GOOGLE_MAP_BASE_URL);
+    public String getMapURL(final double latitude, final double longitude) {
+        final StringBuilder stringBuilder = new StringBuilder(GOOGLE_MAP_BASE_URL);
         stringBuilder.append(latitude);
         stringBuilder.append(",");
         stringBuilder.append(longitude);
@@ -55,7 +55,7 @@ public class GeocodingService {
     }
 
 
-    public ReverseGeocodingResponse reverseGeocode(double latitude, double longitude) {
+    public ReverseGeocodingResponse reverseGeocode(final double latitude, final double longitude) {
         ReverseGeocodingResponse reverseGeocodingResponse;
         try {
             log.info("Requested reverse geocoding for: " + latitude + "," + longitude);

@@ -52,13 +52,7 @@ public class BotLambdaTest {
         this.botLambda.handleRequest(lexEvent, null);
     }
 
-    @Test
-    public void getPosition() throws Exception {
-        PositionLambda botLambda = new PositionLambda();
-        Position position = botLambda.retrieveVehiclePosition();
-        Assert.assertTrue(position.isSuccess());
 
-    }
 
     @Test
     public void deserializeTemperature() throws Exception {

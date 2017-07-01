@@ -23,36 +23,36 @@ public class MessageProcessorService {
     private AuthenticationService authenticationService = new AuthenticationService();
     private LexRuntimeService lexRuntimeService = new LexRuntimeService();
 
-    public String processMessage(Activity activity) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
+    public String processMessage(final Activity activity) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
         log.info("Processing message: " + activity.getText());
-        String reply = lexRuntimeService.sendToBot(activity.getText(), activity.getFrom().getId());
+        final String reply = lexRuntimeService.sendToBot(activity.getText(), activity.getFrom().getId());
         return this.sendMessageToConversation(activity.getChannelId(), activity.getRecipient(), activity.getFrom(), activity.getServiceUrl(), reply, activity.getConversation().getId()).getId();
     }
 
 
-    private ResourceResponse sendMessageToConversation(String channelId, ChannelAccount fromAccount, ChannelAccount toAccount, String serviceUrl, String text, String conversationId) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
-        Activity echo = new Activity();
+    private ResourceResponse sendMessageToConversation(final String channelId, final ChannelAccount fromAccount, final ChannelAccount toAccount, final String serviceUrl, final String text, final String conversationId) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
+        final Activity echo = new Activity();
         echo.setFrom(fromAccount);
         echo.setType("message");
         echo.setText(text);
         echo.setRecipient(toAccount);
         echo.setChannelId(channelId);
 
-        ConversationAccount conversationAccount = new ConversationAccount();
+        final ConversationAccount conversationAccount = new ConversationAccount();
         conversationAccount.setId(conversationId);
         echo.setConversation(conversationAccount);
 
-        ConversationsApi conversationsApi = new ConversationsApi(instantiateApiClient(serviceUrl));
+        final ConversationsApi conversationsApi = new ConversationsApi(instantiateApiClient(serviceUrl));
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter()).create();
         return conversationsApi.conversationsSendToConversation(echo, conversationId);
     }
 
-    private ApiClient instantiateApiClient(String urlBasePath) throws NoSuchFieldException, IllegalAccessException, IOException {
-        log.info("Starting authetication process");
-        ApiClient apiClient = new ApiClient();
-        AuthenticationResponse authenticationResponse = authenticationService.authenticate();
+    private ApiClient instantiateApiClient(final String urlBasePath) throws NoSuchFieldException, IllegalAccessException, IOException {
+        log.info("Starting authentication process");
+        final ApiClient apiClient = new ApiClient();
+        final AuthenticationResponse authenticationResponse = authenticationService.authenticate();
         apiClient.getHttpClient().networkInterceptors().add(chain -> {
             Request request = chain.request();
             request = request.newBuilder().addHeader(AUTHORIZATION, authenticationResponse.getTokenType() + " " + authenticationResponse.getAccessToken()).build();
