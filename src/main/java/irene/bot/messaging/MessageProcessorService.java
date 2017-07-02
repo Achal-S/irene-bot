@@ -9,31 +9,51 @@ import io.swagger.client.model.Activity;
 import io.swagger.client.model.ChannelAccount;
 import io.swagger.client.model.ConversationAccount;
 import io.swagger.client.model.ResourceResponse;
-import irene.bot.embedded.LexRuntimeService;
+import irene.bot.LexRuntimeService;
 import irene.bot.messaging.model.AuthenticationResponse;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageProcessorService {
 
+    public static final String CHANNEL = "channel";
+    public static final String CONVERSATION_ID = "conversationId";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String SERVICE_URL = "serviceUrl";
+
     private static final String AUTHORIZATION = "Authorization";
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessageProcessorService.class);
+
+    private static final String MESSAGE = "message";
 
     private AuthenticationService authenticationService = new AuthenticationService();
     private LexRuntimeService lexRuntimeService = new LexRuntimeService();
 
     public String processMessage(final Activity activity) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
         log.info("Processing message: " + activity.getText());
-        final String reply = lexRuntimeService.sendToBot(activity.getText(), activity.getFrom().getId());
+        Map<String, String> sessionAttributes = this.buildSessionAttributesMap(activity.getChannelId(), activity.getConversation().getId(), activity.getFrom().getId(), activity.getFrom().getName(), activity.getServiceUrl());
+        final String reply = lexRuntimeService.sendToBot(activity.getText(), sessionAttributes);
         return this.sendMessageToConversation(activity.getChannelId(), activity.getRecipient(), activity.getFrom(), activity.getServiceUrl(), reply, activity.getConversation().getId()).getId();
     }
 
+    private Map<String, String> buildSessionAttributesMap(String channel, String conversationId, String id, String name, String serviceUrl){
+        Map<String, String> sessionAttributesMap = new HashMap<>();
+        sessionAttributesMap.put(CHANNEL, channel);
+        sessionAttributesMap.put(CONVERSATION_ID, conversationId);
+        sessionAttributesMap.put(ID, id);
+        sessionAttributesMap.put(NAME, name);
+        sessionAttributesMap.put(SERVICE_URL, serviceUrl);
+        return sessionAttributesMap;
+    }
 
-    private ResourceResponse sendMessageToConversation(final String channelId, final ChannelAccount fromAccount, final ChannelAccount toAccount, final String serviceUrl, final String text, final String conversationId) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
+    public ResourceResponse sendMessageToConversation(final String channelId, final ChannelAccount fromAccount, final ChannelAccount toAccount, final String serviceUrl, final String text, final String conversationId) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
         final Activity echo = new Activity();
         echo.setFrom(fromAccount);
-        echo.setType("message");
+        echo.setType(MESSAGE);
         echo.setText(text);
         echo.setRecipient(toAccount);
         echo.setChannelId(channelId);

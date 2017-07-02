@@ -1,11 +1,11 @@
-package irene.bot.embedded;
+package irene.bot.embedded.sensing;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import irene.bot.embedded.AbstractEmbeddedLambda;
 import irene.bot.embedded.model.LexEvent;
 import irene.bot.embedded.model.LexResponse;
-import irene.bot.embedded.model.Pressure;
-import irene.bot.embedded.model.Temperature;
+import irene.bot.embedded.sensing.model.Pressure;
 
 public class PressureLambda extends AbstractEmbeddedLambda implements RequestHandler<LexEvent, LexResponse> {
 
@@ -17,11 +17,12 @@ public class PressureLambda extends AbstractEmbeddedLambda implements RequestHan
         log.info(String.format("Intent %s triggered with confirmation %s", lexEvent.getCurrentIntent().getName(), lexEvent.getCurrentIntent().getConfirmationStatus()));
         String msg;
         try {
-            final String JSONresponse = retrieveSensorReading(PRESSURE_PATH);
+            final String JSONresponse = embeddedEndpointGET(PRESSURE_PATH);
             final Pressure pressure = parseResponse(JSONresponse, Pressure.class);
             log.info("Retrieved pressure: " + pressure);
             msg = String.format("Hey darling, pressure is %f millibars.", pressure.getPressure());
         } catch (Exception e) {
+            log.error(e);
             msg = "Sorry, I am unable to sense the pressure right now.";
         }
         return sendReplyToLex(msg, FULFILLED, CLOSE, PLAIN_TEXT);

@@ -1,4 +1,4 @@
-package irene.bot.embedded.model;
+package irene.bot.embedded.sensing.model;
 
 public class Humidity {
 

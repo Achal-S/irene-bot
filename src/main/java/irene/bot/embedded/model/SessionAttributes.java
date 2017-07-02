@@ -6,27 +6,63 @@ import com.google.gson.annotations.SerializedName;
 
 public class SessionAttributes {
 
-    @SerializedName("key1")
+    @SerializedName("channel")
     @Expose
-    private String key1;
-    @SerializedName("key2")
+    private String channel;
+
+    @SerializedName("conversationId")
     @Expose
-    private String key2;
+    private String conversationId;
 
-    public String getKey1() {
-        return key1;
+    @SerializedName("id")
+    @Expose
+    private String id;
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    @SerializedName("serviceUrl")
+    @Expose
+    private String serviceUrl;
+
+    public String getServiceUrl() {
+        return serviceUrl;
     }
 
-    public void setKey1(String key1) {
-        this.key1 = key1;
+    public void setServiceUrl(String serviceUrl) {
+        this.serviceUrl = serviceUrl;
     }
 
-    public String getKey2() {
-        return key2;
+    public String getChannel() {
+        return channel;
     }
 
-    public void setKey2(String key2) {
-        this.key2 = key2;
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

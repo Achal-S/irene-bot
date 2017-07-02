@@ -2,8 +2,12 @@ package irene.bot.embedded;
 
 import com.google.gson.Gson;
 import irene.bot.embedded.model.LexEvent;
-import irene.bot.embedded.model.Position;
-import org.junit.*;
+import irene.bot.embedded.sensing.PositionLambda;
+import irene.bot.embedded.sensing.model.Position;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 
 public class BotLambdaTest {
@@ -51,7 +55,6 @@ public class BotLambdaTest {
 
         this.botLambda.handleRequest(lexEvent, null);
     }
-
 
 
     @Test

@@ -11,9 +11,9 @@ import org.apache.commons.codec.binary.StringUtils;
 import org.joda.time.DateTime;
 
 
-public class MessagingLambda implements RequestHandler<MessageProcessingInput, MessageProcessingResult> {
+public class MessagingReceivedLambda implements RequestHandler<MessageProcessingInput, MessageProcessingResult> {
 
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessagingLambda.class);
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessagingReceivedLambda.class);
     private MessageProcessorService messageProcessorService = new MessageProcessorService();
 
     private String decode(String s) {

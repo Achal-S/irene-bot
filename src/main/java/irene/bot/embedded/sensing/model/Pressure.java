@@ -1,27 +1,26 @@
-package irene.bot.embedded.model;
+package irene.bot.embedded.sensing.model;
 
+public class Pressure {
 
-public class Temperature {
-
-    private double temperature;
+    private double pressure;
     private boolean success;
     private String message;
 
-    public Temperature(double temperature, boolean success, String message) {
-        this.temperature = temperature;
+    public Pressure(double pressure, boolean success, String message) {
+        this.pressure = pressure;
         this.success = success;
         this.message = message;
     }
 
-    public Temperature() {
+    public Pressure() {
     }
 
-    public double getTemperature() {
-        return temperature;
+    public double getPressure() {
+        return pressure;
     }
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
+    public void setPressure(double pressure) {
+        this.pressure = pressure;
     }
 
     public boolean isSuccess() {
@@ -42,6 +41,6 @@ public class Temperature {
 
     @Override
     public String toString(){
-        return String.format("Temperature is [%f Celsius]", temperature);
+        return String.format("Pressure is [%f mb]", pressure);
     }
 }
