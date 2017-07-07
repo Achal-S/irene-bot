@@ -29,8 +29,8 @@ public class TextingService {
     private static final String TEXT = "text";
     private static final String CHARSET = "charset";
     private static final String SENDER_NAME = "Irene";
-    //    private static final String SEND_SMS_CLASSIC = "send_sms_classic";
-    private static final String SEND_SMS_CLASSIC = "test_send_sms_classic";
+    private static final String SEND_SMS_CLASSIC = "send_sms_classic";
+//    private static final String SEND_SMS_CLASSIC = "test_send_sms_classic";
     private static final String RECIPIENTS = "recipients[]";
     private static final String SKEBBY_USERNAME_PROPERTY = "skebby.username";
     private static final String SKEBBY_PASSWORD_PROPERTY = "skebby.password";
@@ -86,8 +86,8 @@ public class TextingService {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        TextingService textingService = new TextingService();
-        textingService.sendTextNotification("this is a test", "393454132959");
-    }
+//    public static void main(String[] args) throws Exception {
+//        TextingService textingService = new TextingService();
+//        textingService.sendTextNotification("this is a test", "393454132959");
+//    }
 }

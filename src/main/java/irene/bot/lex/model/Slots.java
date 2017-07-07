@@ -6,20 +6,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class Slots {
 
-//    @SerializedName("alarmStatus")
-//    @Expose
-//    private String alarmStatus;
-//
-//    public String getAlarmStatus() {
-//        return alarmStatus;
-//    }
-//
-//    public void setAlarmStatus(String alarmStatus) {
-//        this.alarmStatus = alarmStatus;
-//    }
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
 
-//    @Override
-//    public String toString() {
-//        return this.alarmStatus;
-//    }
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    @Override
+    public String toString() {
+        return this.mobile;
+    }
 }
