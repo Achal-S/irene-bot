@@ -147,6 +147,8 @@
             <artifactId>aws-java-sdk-core</artifactId>
             <version>1.11.151</version>
         </dependency>
+
+
     </dependencies>
 
     <build>

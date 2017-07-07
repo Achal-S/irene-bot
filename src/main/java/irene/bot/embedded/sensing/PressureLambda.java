@@ -2,12 +2,13 @@ package irene.bot.embedded.sensing;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import irene.bot.embedded.AbstractEmbeddedLambda;
-import irene.bot.embedded.model.LexEvent;
-import irene.bot.embedded.model.LexResponse;
+import irene.bot.embedded.AbstractEmbeddedClient;
+import irene.bot.lex.model.FullfillmentState;
+import irene.bot.lex.model.LexEvent;
+import irene.bot.lex.model.LexResponse;
 import irene.bot.embedded.sensing.model.Pressure;
 
-public class PressureLambda extends AbstractEmbeddedLambda implements RequestHandler<LexEvent, LexResponse> {
+public class PressureLambda extends AbstractEmbeddedClient implements RequestHandler<LexEvent, LexResponse> {
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(PressureLambda.class);
     private static final String PRESSURE_PATH = "pressure";
@@ -25,6 +26,6 @@ public class PressureLambda extends AbstractEmbeddedLambda implements RequestHan
             log.error(e);
             msg = "Sorry, I am unable to sense the pressure right now.";
         }
-        return sendReplyToLex(msg, FULFILLED, CLOSE, PLAIN_TEXT);
+        return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
     }
 }

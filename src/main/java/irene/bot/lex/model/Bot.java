@@ -1,5 +1,5 @@
 
-package irene.bot.embedded.model;
+package irene.bot.lex.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

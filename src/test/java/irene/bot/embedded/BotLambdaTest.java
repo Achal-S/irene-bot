@@ -1,9 +1,10 @@
 package irene.bot.embedded;
 
 import com.google.gson.Gson;
-import irene.bot.embedded.model.LexEvent;
 import irene.bot.embedded.sensing.PositionLambda;
 import irene.bot.embedded.sensing.model.Position;
+import irene.bot.lex.model.LexResponse;
+import irene.bot.lex.model.Slots;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,9 +52,10 @@ public class BotLambdaTest {
     @Ignore
     public void testLambda() {
         Gson gson = new Gson();
-        LexEvent lexEvent = gson.fromJson(input, LexEvent.class);
 
-        this.botLambda.handleRequest(lexEvent, null);
+        String slots = gson.toJson(new Slots());
+//
+        System.out.println(slots);
     }
 
 

@@ -2,19 +2,19 @@ package irene.bot.embedded.sensing;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import irene.bot.embedded.AbstractEmbeddedLambda;
-import irene.bot.embedded.model.LexEvent;
-import irene.bot.embedded.model.LexResponse;
+import irene.bot.embedded.AbstractEmbeddedClient;
+import irene.bot.lex.model.FullfillmentState;
+import irene.bot.lex.model.LexEvent;
+import irene.bot.lex.model.LexResponse;
 import irene.bot.embedded.sensing.model.Position;
 import irene.bot.map.GeocodingService;
 
-public class PositionLambda extends AbstractEmbeddedLambda implements RequestHandler<LexEvent, LexResponse> {
+public class PositionLambda extends AbstractEmbeddedClient implements RequestHandler<LexEvent, LexResponse> {
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(PositionLambda.class);
     private static final String POSITION_PATH = "position";
 
     private GeocodingService geocodingService = new GeocodingService();
-
 
     @Override
     public LexResponse handleRequest(final LexEvent lexEvent, final Context context) {
@@ -31,7 +31,7 @@ public class PositionLambda extends AbstractEmbeddedLambda implements RequestHan
             log.error(e);
             msg = "Sorry, I am unable to locate my position right now: satellites are unpredictable.";
         }
-        return sendReplyToLex(msg, FULFILLED, CLOSE, PLAIN_TEXT);
+        return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
     }
 
 

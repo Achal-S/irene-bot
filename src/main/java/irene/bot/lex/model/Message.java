@@ -1,5 +1,5 @@
 
-package irene.bot.embedded.model;
+package irene.bot.lex.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -27,6 +27,11 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return this.content + " " + this.contentType;
     }
 
 }

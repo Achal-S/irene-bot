@@ -4,7 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import io.swagger.client.model.ChannelAccount;
 import io.swagger.client.model.ResourceResponse;
-import irene.bot.embedded.alarm.model.Status;
+import irene.bot.embedded.model.Status;
 import irene.bot.messaging.MessageProcessorService;
 import irene.bot.util.ApplicationPropertiesUtil;
 

@@ -1,4 +1,4 @@
-package irene.bot.embedded.alarm.model;
+package irene.bot.embedded.model;
 
 public class Status {
 
@@ -10,6 +10,7 @@ public class Status {
     private String id;
     private String name;
     private String serviceUrl;
+    private String textNotification;
 
 
     public Status(boolean enabled, String message, String callBack) {
@@ -19,6 +20,14 @@ public class Status {
     }
 
     public Status() {
+    }
+
+    public String getTextNotification() {
+        return textNotification;
+    }
+
+    public void setTextNotification(String textNotification) {
+        this.textNotification = textNotification;
     }
 
     public String getServiceUrl() {

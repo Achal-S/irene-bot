@@ -1,4 +1,4 @@
-package irene.bot;
+package irene.bot.lex;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lexruntime.AmazonLexRuntime;
@@ -9,11 +9,11 @@ import irene.bot.messaging.MessageProcessorService;
 
 import java.util.Map;
 
-public class LexRuntimeService {
+public class LexMessagingService {
 
     private static final String BOT_NAME = "irene";
     private static final String BOT_ALIAS = "prod";
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LexRuntimeService.class);
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LexMessagingService.class);
 
     public String sendToBot(final String msg, final Map<String, String> sessionAttributes) {
         log.info("Sending message to Lex runtime: " + msg);

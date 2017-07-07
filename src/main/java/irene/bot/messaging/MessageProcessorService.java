@@ -9,7 +9,7 @@ import io.swagger.client.model.Activity;
 import io.swagger.client.model.ChannelAccount;
 import io.swagger.client.model.ConversationAccount;
 import io.swagger.client.model.ResourceResponse;
-import irene.bot.LexRuntimeService;
+import irene.bot.lex.LexMessagingService;
 import irene.bot.messaging.model.AuthenticationResponse;
 import org.joda.time.DateTime;
 
@@ -31,12 +31,12 @@ public class MessageProcessorService {
     private static final String MESSAGE = "message";
 
     private AuthenticationService authenticationService = new AuthenticationService();
-    private LexRuntimeService lexRuntimeService = new LexRuntimeService();
+    private LexMessagingService lexMessagingService = new LexMessagingService();
 
     public String processMessage(final Activity activity) throws ApiException, NoSuchFieldException, IllegalAccessException, IOException {
         log.info("Processing message: " + activity.getText());
         Map<String, String> sessionAttributes = this.buildSessionAttributesMap(activity.getChannelId(), activity.getConversation().getId(), activity.getFrom().getId(), activity.getFrom().getName(), activity.getServiceUrl());
-        final String reply = lexRuntimeService.sendToBot(activity.getText(), sessionAttributes);
+        final String reply = lexMessagingService.sendToBot(activity.getText(), sessionAttributes);
         return this.sendMessageToConversation(activity.getChannelId(), activity.getRecipient(), activity.getFrom(), activity.getServiceUrl(), reply, activity.getConversation().getId()).getId();
     }
 

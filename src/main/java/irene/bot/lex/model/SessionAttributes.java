@@ -1,5 +1,5 @@
 
-package irene.bot.embedded.model;
+package irene.bot.lex.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -26,8 +26,20 @@ public class SessionAttributes {
     @Expose
     private String serviceUrl;
 
+    @SerializedName("textNotification")
+    @Expose
+    private String textNotification;
+
     public String getServiceUrl() {
         return serviceUrl;
+    }
+
+    public String getTextNotification() {
+        return textNotification;
+    }
+
+    public void setTextNotification(String textNotification) {
+        this.textNotification = textNotification;
     }
 
     public void setServiceUrl(String serviceUrl) {

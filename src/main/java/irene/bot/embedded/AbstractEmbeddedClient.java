@@ -1,12 +1,7 @@
 package irene.bot.embedded;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
-import irene.bot.embedded.model.DialogAction;
-import irene.bot.embedded.model.LexEvent;
-import irene.bot.embedded.model.LexResponse;
-import irene.bot.embedded.model.Message;
+import irene.bot.lex.LexFullfillmentService;
 import irene.bot.util.ApplicationPropertiesUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -25,37 +20,17 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public abstract class AbstractEmbeddedLambda implements RequestHandler<LexEvent, LexResponse> {
+public abstract class AbstractEmbeddedClient {
 
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AbstractEmbeddedLambda.class);
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AbstractEmbeddedClient.class);
     private static final String IRENE_EMBEDDED_URL_PROPERTY = "irene.embedded.url";
     private static final int TIMEOUT = 10000;
     private static final String APPLICATION_JSON = "application/json";
     private static final String CONTENT_TYPE = "Content-type";
 
-    protected static final String FULFILLED = "Fulfilled";
-    protected static final String CLOSE = "Close";
-    protected static final String PLAIN_TEXT = "PlainText";
-
     private final String IRENE_EMBEDDED_BASE_URL = ApplicationPropertiesUtil.getProperty(IRENE_EMBEDDED_URL_PROPERTY, this.getClass());
+    protected final LexFullfillmentService lexFullfillmentService = new LexFullfillmentService();
 
-    public abstract LexResponse handleRequest(final LexEvent lexEvent, final Context context);
-
-    protected LexResponse sendReplyToLex(final String msg, final String fullfillmentState, final String type, final String contentType) {
-        final LexResponse lexResponse = new LexResponse();
-        final DialogAction dialogAction = new DialogAction();
-        final Message message = new Message();
-
-        message.setContentType(contentType);
-        message.setContent(msg);
-
-        dialogAction.setFulfillmentState(fullfillmentState);
-        dialogAction.setType(type);
-        dialogAction.setMessage(message);
-
-        lexResponse.setDialogAction(dialogAction);
-        return lexResponse;
-    }
 
     protected <T> T parseResponse(final String positionJSON, final Class<T> clazz) throws IOException {
         final Gson gson = new Gson();
@@ -95,7 +70,7 @@ public abstract class AbstractEmbeddedLambda implements RequestHandler<LexEvent,
         }
     }
 
-    private <T> String instantiateBodyString(T body){
+    private <T> String instantiateBodyString(T body) {
         Gson gson = new Gson();
         return gson.toJson(body);
     }
@@ -148,7 +123,7 @@ public abstract class AbstractEmbeddedLambda implements RequestHandler<LexEvent,
 
             HttpPut httpPut = new HttpPut(IRENE_EMBEDDED_BASE_URL + path);
             String bodyString = instantiateBodyString(body);
-            log.info("PUTing string: "+bodyString);
+            log.info("PUTing string: " + bodyString);
             httpPut.setEntity(new StringEntity(bodyString, StandardCharsets.UTF_8.name()));
             httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON);
 
