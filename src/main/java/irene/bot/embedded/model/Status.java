@@ -96,6 +96,6 @@ public class Status {
 
     @Override
     public String toString(){
-        return String.format("Safety mode enabled is %s, with callback %s, serviceUrl %s, and message \"%s\"", this.enabled, this.callBack, this.serviceUrl, this.message);
+        return String.format("Enabled is %s, with callback %s, serviceUrl %s, and message \"%s\"", this.enabled, this.callBack, this.serviceUrl, this.message);
     }
 }
