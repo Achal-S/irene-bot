@@ -11,6 +11,7 @@ public class Status {
     private String name;
     private String serviceUrl;
     private String textNotification;
+    private String backOffMessage;
 
 
     public Status(boolean enabled, String message, String callBack) {
@@ -20,6 +21,14 @@ public class Status {
     }
 
     public Status() {
+    }
+
+    public String getBackOffMessage() {
+        return backOffMessage;
+    }
+
+    public void setBackOffMessage(String backOffMessage) {
+        this.backOffMessage = backOffMessage;
     }
 
     public String getTextNotification() {

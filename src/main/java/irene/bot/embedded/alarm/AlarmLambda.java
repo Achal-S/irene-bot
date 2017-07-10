@@ -80,6 +80,7 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
 
     private LexResponse turnAlarmOn(LexEvent lexEvent) throws IOException {
         final Status status = buildStatusObject(lexEvent.getSessionAttributes());
+        status.setBackOffMessage("Hey fucker, take your hands off of me!!");
         status.setEnabled(true);
         String msg;
         LexResponse lexResponse;

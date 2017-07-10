@@ -28,7 +28,7 @@ public class LexFullfillmentService {
 
 
     public LexResponse lexConfirmIntent(final String msg, final String intentName, final Slots slots) {
-        log.info("Building lex confim intent response: " + msg);
+        log.info("Building lex confirm intent response: " + msg);
         final LexResponse lexResponse = new LexResponse();
         final DialogAction dialogAction = new DialogAction();
         final Message message = new Message();
