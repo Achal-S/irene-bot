@@ -20,39 +20,58 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
     @Override
     public LexResponse handleRequest(final LexEvent lexEvent, final Context context) {
         log.info(String.format("Intent %s triggered with confirmation %s", lexEvent.getCurrentIntent().getName(), lexEvent.getCurrentIntent().getConfirmationStatus()));
-        ConfirmationStatus confirmationStatus = ConfirmationStatus.fromString(lexEvent.getCurrentIntent().getConfirmationStatus());
-        String msg;
         LexResponse lexResponse;
-
         log.info("Current mobile is: " + lexEvent.getCurrentIntent().getSlots().getMobile());
-
-        try {
-            switch (confirmationStatus) {
-                case NONE:
-                    if (lexEvent.getCurrentIntent().getSlots().getMobile() == null && getSafetyModeStatus().isEnabled()) {
-                        lexResponse = this.retrieveMobileSlot(lexEvent);
-                    } else {
-                        lexResponse = this.processConfirmationStatusNone(lexEvent);
-                    }
-                    break;
-                case CONFIRMED:
-                    lexResponse = this.processConfirmationStatusConfirmed(lexEvent);
-                    break;
-                case DENIED:
-                    lexResponse = this.processConfirmationStatusDenied();
-                    break;
-                default:
-                    msg = String.format("Sorry there has been a problem. Safety mode has not been set/unset.");
-                    lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
-            }
-
+        try{
+            lexResponse = this.handleFullfillment(lexEvent);
         } catch (Exception e) {
             log.error(e);
-            msg = String.format("Safety mode has not been set. Error is: " + e.getMessage());
+            String msg = String.format("Safety mode has not been set. Error is: " + e.getMessage());
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
 
+    }
+
+//    private LexResponse handleDialogHook(final LexEvent lexEvent) throws IOException {
+//        log.info("Dialog hook handling");
+//        if(lexEvent.getCurrentIntent().getConfirmationStatus().equals(ConfirmationStatus.CONFIRMED && && getSafetyModeStatus().isEnabled()){
+//            String mobile = lexEvent.getCurrentIntent().getSlots().getMobile();
+//            if(isMobileValid(cleanMobileNumber(mobile))) {
+//
+//            }else{
+//                String msg = "Sorry number format seems not invalid. Please, insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
+//                return lexFullfillmentService.lexElicitSlot(msg, "mobile", lexEvent.getCurrentIntent().getSlots(), MANAGE_SAFETY_STATUS);
+//            }
+//        }
+//        return lexFullfillmentService.lexDelegate(lexEvent.getCurrentIntent().getSlots());
+//    }
+
+
+    private LexResponse handleFullfillment(final LexEvent lexEvent) throws IOException {
+        log.info("Fullfillment handling");
+        ConfirmationStatus confirmationStatus = ConfirmationStatus.fromString(lexEvent.getCurrentIntent().getConfirmationStatus());
+        String msg;
+        LexResponse lexResponse;
+        switch (confirmationStatus) {
+            case NONE:
+                if (lexEvent.getCurrentIntent().getSlots().getMobile() == null && getSafetyModeStatus().isEnabled()) {
+                    lexResponse = this.retrieveMobileSlot(lexEvent);
+                } else {
+                    lexResponse = this.processConfirmationStatusNone(lexEvent);
+                }
+                break;
+            case CONFIRMED:
+                lexResponse = this.processConfirmationStatusConfirmed(lexEvent);
+                break;
+            case DENIED:
+                lexResponse = this.processConfirmationStatusDenied();
+                break;
+            default:
+                msg = String.format("Sorry there has been a problem. Safety mode has not been set/unset.");
+                lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
+        }
+        return lexResponse;
     }
 
     private LexResponse retrieveMobileSlot(LexEvent lexEvent) throws IOException {
@@ -62,7 +81,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
 
     private LexResponse processConfirmationStatusNone(LexEvent lexEvent) throws IOException {
         String mobile = lexEvent.getCurrentIntent().getSlots().getMobile();
-        if(isMobileValid(mobile)){
+        if(isMobileValid(cleanMobileNumber(mobile))){
             final Status status = getSafetyModeStatus();
             String msg;
             if (status.isEnabled()) {
@@ -71,7 +90,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
                 msg = "Safety mode is disabled, do you want to turn it on?";
             }
             Slots slots = new Slots();
-            slots.setMobile(mobile);
+            slots.setMobile(cleanMobileNumber(mobile));
             return lexFullfillmentService.lexConfirmIntent(msg, MANAGE_SAFETY_STATUS, slots);
         }else{
             String msg = "Sorry number format seems not invalid. Please, insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
@@ -163,5 +182,17 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
         boolean validity = mobile.matches(regex) && mobile.length() == 12;
         log.info("checking mobile validity: "+mobile+" = "+validity);
         return validity;
+    }
+
+    private String cleanMobileNumber(String mobile){
+        log.info("cleaning mobile number: "+mobile);
+        String result = mobile.replace("(", "");
+        result = result.replace("(", "");
+        result = result.replace(")", "");
+        result = result.replace("-", "");
+        result = result.replace("/", "");
+        result = result.replace(" ", "");
+        result = result.replace("+", "");
+        return result;
     }
 }
