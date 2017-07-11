@@ -8,6 +8,8 @@ import irene.bot.lex.model.*;
 import irene.bot.util.ApplicationPropertiesUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandler<LexEvent, LexResponse> {
 
@@ -15,6 +17,8 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
     private static final String ALARM_PATH = "alarm";
     private static final String ALARM_CALLBACK_PROPERTY = "alarm.notification.callback";
     private static final String MANAGE_ALARM_STATUS = "ManageAlarmStatus";
+    private static final String DEFAULT_BACK_OFF_MESSAGE = "Hey! Back off";
+    private static final String BACK_OFF_MESSAGE = "backOffMessage";
     private final String ALARM_CALLBACK_URL = ApplicationPropertiesUtil.getProperty(ALARM_CALLBACK_PROPERTY, this.getClass());
 
     @Override
@@ -27,7 +31,7 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
         try {
             switch (confirmationStatus) {
                 case NONE:
-                    lexResponse = this.processConfirmationStatusNone();
+                    lexResponse = this.processConfirmationStatusNone(lexEvent);
                     break;
                 case CONFIRMED:
                     lexResponse = this.processConfirmationStatusConfirmed(lexEvent);
@@ -42,45 +46,60 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
 
         } catch (Exception e) {
             log.error(e);
-            msg = String.format("Alarm has not been set. Error is: " + e.getMessage());
+            msg = String.format("There was a network error. Alarm has not been set.");
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
 
     }
 
-    private LexResponse processConfirmationStatusNone() throws IOException {
-        final Status status = getAlarmStatus();
-        String msg;
-        if (status.isEnabled()) {
-            msg = "Alarm is enabled, do you want to turn it off?";
-        } else {
-            msg = "Alarm is disabled, do you want to turn it on?";
+    private LexResponse processConfirmationStatusNone(LexEvent lexEvent) throws IOException {
+        Boolean desiredState = lexEvent.getCurrentIntent().getSlots().getDesiredState();
+
+        if(desiredState==null) {
+            final Slots slots = new Slots();
+            String msg;
+            final Status status = getAlarmStatus();
+            if (status.isEnabled()) {
+                msg = "Alarm is enabled, do you want to turn it off?";
+                slots.setDesiredState(false);
+            } else {
+                msg = "Alarm is disabled, do you want to turn it on?";
+                slots.setDesiredState(true);
+            }
+            slots.setBackOffMessage(DEFAULT_BACK_OFF_MESSAGE);
+            return lexFullfillmentService.lexConfirmIntent(msg, MANAGE_ALARM_STATUS, slots);
+        }else{
+            return this.turnAlarmOn(lexEvent);
         }
-        return lexFullfillmentService.lexConfirmIntent(msg, MANAGE_ALARM_STATUS, new Slots());
     }
 
     private LexResponse processConfirmationStatusConfirmed(LexEvent lexEvent) throws IOException {
-        final Status status = getAlarmStatus();
         LexResponse lexResponse;
-        if (status.isEnabled()) {
-            lexResponse = this.turnAlarmOff(lexEvent);
+        Boolean desiredState = lexEvent.getCurrentIntent().getSlots().getDesiredState();
+
+        if (desiredState == null) {
+            return lexFullfillmentService.lexCloseIntent("Sorry, I don't understand that", FullfillmentState.FAILED);
+        }
+
+        if (desiredState) {
+            lexResponse = lexFullfillmentService.lexElicitSlot("Please, enter a back-off message", BACK_OFF_MESSAGE, lexEvent.getCurrentIntent().getSlots(), MANAGE_ALARM_STATUS);
         } else {
-            lexResponse = this.turnAlarmOn(lexEvent);
+            lexResponse = this.turnAlarmOff(lexEvent);
         }
         return lexResponse;
-
     }
 
+
     private LexResponse processConfirmationStatusDenied() throws IOException {
-        LexResponse lexResponse = lexFullfillmentService.lexCloseIntent("Ok.", FullfillmentState.FULFILLED);
+        LexResponse lexResponse = lexFullfillmentService.lexCloseIntent("Ok, talk to you later darling.", FullfillmentState.FULFILLED);
         return lexResponse;
 
     }
 
     private LexResponse turnAlarmOn(LexEvent lexEvent) throws IOException {
         final Status status = buildStatusObject(lexEvent.getSessionAttributes());
-        status.setBackOffMessage("Hey fucker, take your hands off of me!!");
+        status.setBackOffMessage(lexEvent.getCurrentIntent().getSlots().getBackOffMessage());
         status.setEnabled(true);
         String msg;
         LexResponse lexResponse;

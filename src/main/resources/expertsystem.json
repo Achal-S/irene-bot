@@ -1,0 +1,621 @@
+{
+  "primary": [
+    { "id": 1,
+      "question": "Engine Doesn’t Start, Starting Difficulty",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Starter motor not rotating",
+          "outcomes":[
+            "Starter lockout or neutral switch trouble",
+            "Starter motor trouble",
+            "Battery voltage low",
+            "Relays not contacting or operating",
+            "Starter button not contacting",
+            "Wiring open or shorted",
+            "Ignition switch trouble",
+            "Engine stop switch trouble",
+            "Main fuse blown"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Starter motor rotating but engine doesn’t turn over",
+          "outcomes":["Starter motor clutch trouble"]
+       },
+        {
+          "id":3,
+          "question":"Engine won’t turn over",
+          "outcomes":[
+            "Valve seizure",
+            "Rocker arm seizure",
+            "Cylinder, piston seizure",
+            "Crankshaft seizure",
+            "Connecting rod small end seizure",
+            "Connecting rod big end seizure",
+            "Transmission gear or bearing seizure",
+            "Camshaft seizure"]
+        },
+        {
+          "id":4,
+          "question":"No fuel flow",
+          "outcomes":[
+            "Fuel tap vacuum hose clogged",
+            "Fuel tank air vent obstructed",
+            "Fuel tap clogged",
+            "Fuel line clogged",
+            "Float valve clogged"]
+        },
+        {
+          "id":5,
+          "question":"Engine flooded",
+          "outcomes":[
+            "Fuel level in carburetor float bowl too high",
+            "Float valve worn or stuck open",
+            "Starting technique faulty. (When flooded, crank the engine with the throttle fully open to allow more air to reach the engine.)"
+            ]
+        },
+        {
+          "id":6,
+          "question":"No spark; spark weak",
+          "outcomes":[
+            "Battery voltage low",
+            "Spark plug dirty, broken, or maladjusted",
+            "Spark plug cap or high tension wiring trouble",
+            "Spark plug cap not in good contact",
+            "Spark plug incorrect",
+            "IC igniter trouble",
+            "Neutral, starter lockout, or side stand switch trouble",
+            "Pickup coil trouble",
+            "Ignition coil trouble",
+            "Ignition or engine stop switch shorted",
+            "Wiring shorted or open",
+            "Main fuse blown"
+            ]
+        },
+        {
+          "id":7,
+          "question":"Compression Low",
+          "outcomes":[
+            "Spark plug loose",
+            "Cylinder head not sufficiently tightened down",
+            "No valve clearance",
+            "Cylinder, piston worn",
+            "Piston ring bad (worn, weak broken, or sticking)",
+            "Piston ring/land clearance excessive",
+            "Cylinder head gasket damaged",
+            "Cylinder head warped",
+            "Valve spring broken or weak",
+            "Valve not seating properly (valve bent, worn, or carbon accumulation on the seating surface)"
+            ]
+        }]
+    },
+    { "id": 2,
+      "question": "Poor Running at Low Speed",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Spark weak",
+          "outcomes":[
+            "Battery voltage low",
+            "Spark plug dirty, broken, or maladjusted",
+            "Spark plug cap or high tension wiring trouble",
+            "Spark Plug cap shorted or not in good contact",
+            "Spark plug incorrect",
+            "IC igniter trouble",
+            "Pickup coil trouble",
+            "Ignition coil trouble"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Fuel/air mixture incorrect",
+          "outcomes":[
+            "Pilot screw maladjusted",
+            "Pilot jet, or air passage clogged",
+            "Air bleed pipe bleed holes clogged",
+            "Pilot passage clogged",
+            "Air cleaner clogged, poorly sealed, or missing",
+            "Starter plunger stuck open",
+            "Fuel level in carburetor float bowl too high or too low",
+            "Fuel tank air vent obstructed",
+            "Carburetor holder loose",
+            "Air cleaner duct loose"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Compression low",
+          "outcomes":[
+            "Spark plug loose",
+            "Cylinder head not sufficiently tightened down",
+            "No valve clearance",
+            "Cylinder, piston worn",
+            "Piston ring bad (worn, weak, broken, or sticking)",
+            "Piston ring/land clearance excessive",
+            "Cylinder head warped",
+            "Cylinder head gasket damaged",
+            "Valve spring broken or weak",
+            "Valve not seating properly (valve bent, worn, or carbon accumulation on the seating surface)",
+            "IC igniter trouble",
+            "Carburetors not synchronizing",
+            "Vacuum piston doesn’t slide smoothly",
+            "Engine oil viscosity too high",
+            "Drive train trouble",
+            "Brake dragging"
+            ]
+        }]
+    },
+    { "id": 3,
+      "question": "Poor Running or No Power at High Speed",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Firing incorrect",
+          "outcomes":[
+            "Spark plug dirty, broken, or maladjusted",
+            "Spark plug cap shorted or not in good contact",
+            "Spark plug incorrect",
+            "IC igniter trouble",
+            "Pickup coil trouble",
+            "Ignition coil trouble"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Fuel/air mixture incorrect",
+          "outcomes":[
+            "Starter plunger stuck open",
+            "Main jet clogged or wrong size",
+            "Jet needle or needle jet worn",
+            "Air jet clogged",
+            "Fuel level in carburetor float bowl too high or too low",
+            "Bleed holes of air bleed pipe or needle jet clogged",
+            "Air cleaner clogged, poorly sealed, or missing",
+            "Air cleaner duct poorly sealed",
+            "Water of foreign matter in fuel",
+            "Carburetor holder loose",
+            "Fuel tank air vent obstructed",
+            "Fuel tap clogged",
+            "Fuel line clogged"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Compression low",
+          "outcomes":[
+            "Spark plug loose",
+            "Cylinder head not.sufficiently tightened down",
+            "No valve clearance",
+            "Cylinder, piston worn",
+            "Piston ring bad (worn, weak, broken, or sticking)",
+            "Piston ring/land clearance excessive",
+            "Cylinder head gasket damaged",
+            "Cylinder head warped",
+            "Valve spring broken or weak",
+            "Valve not seating properly (valve bent, worn, or carbon accumulation on the seating surface.)"
+            ]
+        },
+        {
+          "id":4,
+          "question":"Knocking",
+          "outcomes":[
+            "Carbon built up in combustion chamber",
+            "Fuel poor quality or incorrect",
+            "Spark plug incorrect",
+            "IC igniter trouble"
+            ]
+        },
+        {
+          "id":5,
+          "question":"Miscellaneous",
+          "outcomes":[
+            "Throttle valve won’t fully open",
+            "Vacuum piston doesn’t slide smoothly",
+            "Brake dragging",
+            "Clutch slipping",
+            "Overheating",
+            "Engine oil level too high",
+            "Engine oil viscosity too high",
+            "Drive train trouble"
+            ]
+        }]
+    },
+    { "id": 4,
+      "question": "Overheating",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Firing incorrect",
+          "outcomes":[
+            "Spark plug dirty, broken, or maladjusted",
+            "Spark plug incorrect",
+            "IC igniter trouble"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Fuel/air mixture incorrect",
+          "outcomes":[
+            "Main jet clogged or wrong size",
+            "Fuel level in carburetor float bowl too low",
+            "Carburetor holder loose",
+            "Air cleaner poorly sealed, or missing",
+            "Air cleaner duct poorly sealed",
+            "Air cleaner clogged"
+            ]
+          
+        },
+        {
+          "id":3,
+          "question":"Compression high",
+          "outcomes":[
+            "Carbon built up in combustion chamber"
+            ]
+        },
+        {
+          "id":4,
+          "question":"Engine load faulty",
+          "outcomes":[
+            "Clutch slipping",
+            "Engine oiHevel too high",
+            "Engine oil viscosity too high",
+            "Drive train trouble",
+            "Brake dragging"
+            ]
+        },
+        {
+          "id":5,
+          "question":"Lubrication inadequate",
+          "outcomes":[
+            "Engine oil level too low",
+            "Engine oil poor quality or incorrect"
+            ]
+        },
+        {
+          "id":6,
+          "question":"Coolant incorrect",
+          "outcomes":[
+            "Coolant level too low",
+            "Coolant deteriorated"
+            ]
+        },
+        {
+          "id":7,
+          "question":"Cooling system component incorrect",
+          "outcomes":[
+            "Radiator clogged",
+            "Thermostat trouble",
+            "Radiator cap trouble",
+            "Thermostatic fan switch trouble",
+            "Fan relay trouble",
+            "Fan motor broken",
+            "Fan blade damaged",
+            "Water pump not turning",
+            "Water pump impeller damaged"
+            ]
+        }]
+    },
+    { "id": 5,
+      "question": "Over Cooling",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Cooling system component incorrect",
+          "outcomes":[
+            "Thermostatic fan switch trouble",
+            "Thermostat trouble"
+            ]
+        }]
+    },
+    { "id": 6,
+      "question": "Clutch Operation Faulty",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Clutch slipping",
+          "outcomes":[
+            "Friction plate worn or warped",
+            "Steel plate worn or warped",
+            "Clutch spring broken or weak",
+            "Clutch release mechanism trouble",
+            "Clutch hub or housing unevenly worn"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Clutch not disengaging properly",
+          "outcomes":[
+            "Clutch plate warped or too rough",
+            "Clutch spring tension uneven",
+            "Engine oil deteriorated",
+            "Engine oil viscosity too high",
+            "Engine oil level too high",
+            "Clutch housing frozen on drive shaft",
+            "Clutch release mechanism trouble"
+            ]
+        }]
+    },
+    { "id": 7,
+      "question": "Gear Shifting Faulty",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Doesn’t go into gear; shift pedal doesn’t return",
+          "outcomes":[
+            "Clutch not disengaging",
+            "Shift fork bent or seized",
+            "Gear stuck on the shaft",
+            "Shift return spring weak or broken",
+            "Shift return spring pin loose",
+            "Pawl spring broken",
+            "Shift mechanism arm broken"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Jumps out of gear",
+          "outcomes":[
+            "Shift fork worn",
+            "Gear groove worn",
+            "Gear dogs and/or dog holes worn",
+            "Shift drum groove worn",
+            "Neutral positioning pin spring weak or broken",
+            "Shift fork pin worn",
+            "Drive shaft, output shaft, and/or gear splines worn"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Overshifts",
+          "outcomes":[
+            "Neutral positioning pin spring weak or broken",
+            "Pawl spring broken"
+            ]
+          
+        }]
+    },
+    { "id": 8,
+      "question": "Abnormal Engine Noise",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Knocking",
+          "outcomes":[
+            "IC igniter trouble",
+            "Carbon built up in combustion chamber",
+            "Fuel poor quality or incorrect",
+            "Spark plug incorrect"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Overheating Piston slap",
+          "outcomes":[
+            "Cylinder/piston clearance excessive",
+            "Cylinder, piston worn",
+            "Connecting rod bent",
+            "Piston pin, piston holes worn"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Valve noise",
+          "outcomes":[
+            "Valve clearance incorrect",
+            "Valve spring broken or weak",
+            "Camshaft bearing worn"
+            ]
+        },
+        {
+          "id":4,
+          "question":"Other noise",
+          "outcomes":[
+            "Connecting rod small end clearance excessive",
+            "Connecting rod big end clearance excessive",
+            "Piston ring worn, broken or stuck",
+            "Piston seizure, damage",
+            "Cylinder head gasket leaking",
+            "Exhaust pipe leaking at cylinder head connection",
+            "Cran kshaft runout excessive",
+            "Engine mounts loose",
+            "Crankshaft bearing worn",
+            "Camshaft chain tensioner trouble",
+            "Camshaft chain, sprocket, guide worn"
+            ]
+        }]
+    },
+    { "id": 9,
+      "question": "Abnormal Drive Train Noise",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Clutch noise",
+          "outcomes":[
+            "Weak or damaged damper",
+            "Clutch housing/friction plate clearance excessive",
+            "Clutch housing gear worn"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Transmission noise",
+          "outcomes":[
+            "Bearings worn",
+            "Transmission gears worn or chipped",
+            "Metal chips jammed in gear teeth",
+            "Engine oil insufficient"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Drive chain noise",
+          "outcomes":[
+            "Drive chain adjusted improperly",
+            "Chain worn",
+            "Rear and/or engine sprocket worn",
+            "Chain lubrication insufficient",
+            "Rear wheel misaligned"
+            ]
+        }]
+    },
+    { "id": 10,
+      "question": "Abnormal Frame Noise",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Front fork noise",
+          "outcomes":[
+            "Oil insufficient or too thin",
+            "Spring weak or broken"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Rear shock absorber noise",
+          "outcomes":[
+            "Shock absorber damaged"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Disc brake noise",
+          "outcomes":[
+            "Pad installed incorrectly",
+            "Pad surface glazed",
+            "Disc warped",
+            "Caliper trouble"
+            ]
+        },
+        {
+          "id":4,
+          "question":"Other noise",
+          "outcomes":[
+            "Bracket, nut, bolt, etc. not properly mounted or tightened"
+            ]
+        }]
+    },
+    { "id": 11,
+      "question": "Exhaust Smokes Excessively",
+      "secondary": [
+        {
+          "id":1,
+          "question":"White smoke",
+          "outcomes":[
+            "Piston oil ring worn",
+            "Cylinder worn",
+            "Valve oil seal damaged",
+            "Valve guide worn",
+            "Engine oil level too high"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Black smoke",
+          "outcomes":[
+            "Air cleaner clogged",
+            "Main jet too large or fallen off",
+            "Starter plunger stuck open",
+            "Fuel level in carburetor float bowl too high"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Brown smoke",
+          "outcomes":[
+            "Main jet too small",
+            "Fuel level in carburetor float bowl too low",
+            "Air cleaner duct loose",
+            "Air cleaner poorly sealed or missing"
+            ]
+        }]
+    },
+    { "id": 12,
+      "question": "Handling and/or Stability Unsatisfactory",
+      "secondary": [
+        {
+          "id":1,
+          "question":"Handlebar hard to turn",
+          "outcomes":[
+            "Steering stem locknut too tight",
+            "Bearing damaged",
+            "Steering bearing lubrication inadequate",
+            "Steering stem bent",
+            "Tire air pressure too low"
+            ]
+        },
+        {
+          "id":2,
+          "question":"Handlebar shakes or excessively vibrates",
+          "outcomes":[
+            "Tire worn",
+            "Swing arm pivot bearing worn",
+            "Rim warped, or not balanced",
+            "Wheel bearing worn",
+            "Handlebar mounting bolts loose",
+            "Steering stem head bolt loose"
+            ]
+        },
+        {
+          "id":3,
+          "question":"Handlebar pulls to one side",
+          "outcomes":[
+            "Frame bent",
+            "Wheel misalignment",
+            "Swing arm bent or twisted",
+            "Steering maladjusted",
+            "Front fork bent",
+            "Right/left fork legs oil level unbalanced"
+            ]
+        },
+        {
+          "id":4,
+          "question":"Shock absorption too hard",
+          "outcomes":[
+            "Front fork oil excessive",
+            "Front fork oil viscosity too high",
+            "Tire air pressure too high",
+            "Front fork bent"
+            ]
+        },
+        {
+          "id":5,
+          "question":"Shock absorption too soft",
+          "outcomes":[
+            "Front fork oil insufficient and/or leaking",
+            "Front fork oil viscosity too low",
+            "Front fork, rear shock absorber spring weak",
+            "Rear shock absorber oil leaking"
+            ]
+        },
+        {
+          "id":6,
+          "question":"Brake Doesn’t Hold",
+          "outcomes":[
+            "Air in the brake line",
+            "Pad or disc worn",
+            "Brake fluid leak",
+            "Disc warped",
+            "Contaminated pad",
+            "Brake fluid deteriorated",
+            "Primary or secondary cup damaged",
+            "Master cylinder scratched inside"
+            ]
+        },
+        {
+          "id":7,
+          "question":"Battery Discharged",
+          "outcomes":[
+            "Battery faulty (e.g., plates sulphated, shorted through sedimentation, electrolyte level too low)",
+            "Battery leads making poor contact",
+            "Load excessive (e.g., bulb of excessive wattage)",
+            "Ignition switch trouble",
+            "Alternator trouble",
+            "Wiring faulty",
+            "Regulator/Rectifier trouble"
+            ]
+        }
+      ]
+    }
+  ]
+}

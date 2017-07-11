@@ -1,5 +1,6 @@
 package irene.bot.util;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 public class ApplicationPropertiesUtil {
@@ -11,11 +12,15 @@ public class ApplicationPropertiesUtil {
     public static <T> String getProperty(String name, Class<T> clazz) {
         try {
             final Properties properties = new Properties();
-            properties.load(clazz.getClassLoader().getResourceAsStream(APPLICATION_PROPERTIES));
+            properties.load(getFile(APPLICATION_PROPERTIES, clazz));
             return properties.getProperty(name);
         } catch (Exception e) {
             log.error(String.format("Property %s not found", name));
             return null;
         }
+    }
+
+    public static <T> InputStream getFile(final String fileName, Class<T> clazz){
+        return clazz.getClassLoader().getResourceAsStream(fileName);
     }
 }
