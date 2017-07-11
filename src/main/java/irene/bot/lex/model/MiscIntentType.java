@@ -2,7 +2,7 @@ package irene.bot.lex.model;
 
 public enum MiscIntentType {
     //    None, Confirmed, or Denied
-    SKILLS("Skills"),
+    HELP("Help"),
     CANCEL("Cancel"),
     STOP("Stop"),
     GREETING("Greeting");

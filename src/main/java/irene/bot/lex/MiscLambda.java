@@ -26,7 +26,7 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
             case GREETING:
                 msg ="Hello darling, I missed you!";
                 break;
-            case SKILLS:
+            case HELP:
                 msg = "I am Irene - the motorbike chatbot - and I can provide to you several services.\n" +
                         "First of all you can ask me the position of the motorbike (\"where are you?\") or basic\n" +
                         "sensor readings like temperature, pressure and humidity.\n" +
