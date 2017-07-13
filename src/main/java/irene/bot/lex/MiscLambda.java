@@ -42,6 +42,12 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
             case GENERIC:
                 msg = "How can I help you, " + MessageUtil.getRandomGreeting() + "?";
                 break;
+            case RIDE:
+                msg = "Let's go " + MessageUtil.getRandomGreeting() + ". Just don't forget the helmet "+MessageUtil.getRandomEmoji();
+                break;
+            case THANKS:
+                msg = "You are wellcome " + MessageUtil.getRandomGreeting() + ". I am here to serve you "+MessageUtil.getRandomEmoji();
+                break;
             case BYE:
                 msg = "Bye bye " + MessageUtil.getRandomGreeting() + ". Don't forget the helmet!  " + getRandomEmoji();
                 break;
@@ -54,8 +60,8 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
                         "First you can ask me to localize the motorbike (e.g., \"where are you?\") or basic\n" +
                         "sensor readings like temperature, pressure and humidity (e.g., \"what is the temperature outside?\").\n" +
                         "I can set an alarm on the motorbike which will alert you if the bike is touched or moved (e.g., \"Please set the alarm\").\n" +
-                        "Furthermore, I provide a safety mode (e.g., \"Please set the safety mode\") in which I can alert someone with a text in case of road accident.\n" +
-                        "Finally, I can help you troubleshoot the mechanical problems you may have on the motorbike (e.g., \"I have a problem, can you help me?\") "+ getRandomEmoji();
+                        "Furthermore, I provide a safety mode (e.g., \"Please set the safety mode\") in which I can alert someone with a text in case of road accident.\n";// +
+                        //"Finally, I can help you troubleshoot the mechanical problems you may have on the motorbike (e.g., \"I have a problem, can you help me?\") "+ getRandomEmoji();
                 break;
         }
         return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);

@@ -15,6 +15,7 @@ public class TemperatureLambda extends AbstractEmbeddedClient implements Request
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TemperatureLambda.class);
     private static final String TEMPERATURE_PATH = "temperature";
+    public static final int WARM_THRESHOLD = 25;
 
     @Override
     public LexResponse handleRequest(final LexEvent lexEvent, final Context context) {
@@ -24,7 +25,13 @@ public class TemperatureLambda extends AbstractEmbeddedClient implements Request
             final String JSONresponse = embeddedEndpointGET(TEMPERATURE_PATH);
             final Temperature temperature = parseResponse(JSONresponse, Temperature.class);
             log.info("Retrieved temperature: " + temperature);
-            msg = String.format("Hey "+ MessageUtil.getRandomGreeting()+", temperature is %.2f Celsius degrees.", temperature.getTemperature());
+
+            if(temperature.getTemperature()> WARM_THRESHOLD){
+                msg = String.format("Hey "+ MessageUtil.getRandomGreeting()+", temperature is %.2f Celsius degrees. I know it's quite warm but don't forget the helmet and the protections "+MessageUtil.getRandomEmoji(), temperature.getTemperature());
+            }else{
+                msg = String.format("Hey "+ MessageUtil.getRandomGreeting()+", temperature is %.2f Celsius degrees.", temperature.getTemperature());
+            }
+
         } catch (Exception e) {
             log.error(e);
             msg = "Sorry, I am unable to sense the temperature right now "+getErrorEmoji();

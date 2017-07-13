@@ -12,7 +12,9 @@ public enum MiscIntentType {
     REAL("Real"),
     LOVE("Love"),
     BYE("Bye"),
+    RIDE("Ride"),
     GREETING("Greeting"),
+    THANKS("Thanks"),
     GENERIC("Generic");
 
     private String value;

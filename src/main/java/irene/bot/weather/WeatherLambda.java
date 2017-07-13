@@ -35,6 +35,10 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
     private static final int TIMEOUT = 10000;
     private static final String OPENWEATHER_URL = "http://api.openweathermap.org/data/2.5/weather";
     private static final String METEOGURU_URL = "http://www.meteoguru.com/en/pro/forecast/";
+    private static final String SNOW = "snow";
+    private static final String MIST = "mist";
+    private static final String PLURAL_SUFFIX = "s";
+    private static final String RAIN = "rain";
 
     private final String openWeatherApiKey = ApplicationPropertiesUtil.getProperty(OPENWEATHER_API_KEY, this.getClass());
 
@@ -60,23 +64,30 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
         return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
     }
 
+    private String getIncipit(Forecasts forecasts){
+        //General Description
+        if(forecasts.getWeather().get(0).getDescription().endsWith(PLURAL_SUFFIX)){
+            return "Where I am there are ";
+        }else{
+            if(forecasts.getWeather().get(0).getDescription().equals(SNOW) || forecasts.getWeather().get(0).getDescription().equals(MIST) || forecasts.getWeather().get(0).getDescription().equals(RAIN)){
+                return "Where I am there is ";
+            }else{
+                return"Where I am there is a ";
+            }
+        }
+    }
 
     private String buildForecastMessage(final Forecasts forecasts){
         final StringBuilder stringBuilder = new StringBuilder();
-
-        //General Description
-        stringBuilder.append("Current weather for my position is: \"");
-        stringBuilder.append(forecasts.getWeather().get(0).getDescription()+"\".\n");
-
+        stringBuilder.append(this.getIncipit(forecasts));
+        //General
+        stringBuilder.append(forecasts.getWeather().get(0).getDescription());
         //Clouds %
-        stringBuilder.append(String.format("There are %d %% of clouds in the sky and ",forecasts.getClouds().getAll()));
-
+        stringBuilder.append(String.format(" and, more precisely, there are %d %% of clouds in the sky.\n",forecasts.getClouds().getAll()));
         //wind
-        stringBuilder.append(String.format("wind speed is %.2f meter/sec with direction of %d meteorological degrees.\n", forecasts.getWind().getSpeed(), forecasts.getWind().getDeg()));
-
+        stringBuilder.append(String.format("Wind speed is %.2f m/s, blowing direction is %d degrees.\n", forecasts.getWind().getSpeed(), forecasts.getWind().getDeg()));
         //temp
         stringBuilder.append(String.format("Temperature is %.2f Celsius degrees.\n",forecasts.getMain().getTemp()));
-
         log.info("Built forecast message: "+stringBuilder.toString());
         return stringBuilder.toString();
     }
