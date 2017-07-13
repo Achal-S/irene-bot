@@ -7,6 +7,9 @@ import irene.bot.lex.model.FullfillmentState;
 import irene.bot.lex.model.LexEvent;
 import irene.bot.lex.model.LexResponse;
 import irene.bot.embedded.sensing.model.Pressure;
+import irene.bot.util.MessageUtil;
+
+import static irene.bot.util.MessageUtil.getErrorEmoji;
 
 public class PressureLambda extends AbstractEmbeddedClient implements RequestHandler<LexEvent, LexResponse> {
 
@@ -21,10 +24,10 @@ public class PressureLambda extends AbstractEmbeddedClient implements RequestHan
             final String JSONresponse = embeddedEndpointGET(PRESSURE_PATH);
             final Pressure pressure = parseResponse(JSONresponse, Pressure.class);
             log.info("Retrieved pressure: " + pressure);
-            msg = String.format("Hey darling, pressure is %f millibars.", pressure.getPressure());
+            msg = String.format("Hey "+ MessageUtil.getRandomGreeting()+", pressure is %.2f millibars.", pressure.getPressure());
         } catch (Exception e) {
             log.error(e);
-            msg = "Sorry, I am unable to sense the pressure right now.";
+            msg = "Sorry, I am unable to sense the pressure right now "+getErrorEmoji();
         }
         return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
     }

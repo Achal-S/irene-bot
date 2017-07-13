@@ -6,6 +6,7 @@ import irene.bot.embedded.AbstractEmbeddedClient;
 import irene.bot.embedded.model.Status;
 import irene.bot.lex.model.*;
 import irene.bot.util.ApplicationPropertiesUtil;
+import irene.bot.util.MessageUtil;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
         log.info(String.format("Intent %s triggered with confirmation %s", lexEvent.getCurrentIntent().getName(), lexEvent.getCurrentIntent().getConfirmationStatus()));
         LexResponse lexResponse;
         log.info("Current mobile is: " + lexEvent.getCurrentIntent().getSlots().getMobile());
-        try{
+        try {
             lexResponse = this.handleFullfillment(lexEvent);
         } catch (Exception e) {
             log.error(e);
@@ -75,13 +76,13 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
     }
 
     private LexResponse retrieveMobileSlot(LexEvent lexEvent) throws IOException {
-        String msg = "Please, insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
+        String msg = "Please, " + MessageUtil.getRandomGreeting() + " insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
         return lexFullfillmentService.lexElicitSlot(msg, "mobile", lexEvent.getCurrentIntent().getSlots(), MANAGE_SAFETY_STATUS);
     }
 
     private LexResponse processConfirmationStatusNone(LexEvent lexEvent) throws IOException {
         String mobile = lexEvent.getCurrentIntent().getSlots().getMobile();
-        if(isMobileValid(cleanMobileNumber(mobile))){
+        if (isMobileValid(cleanMobileNumber(mobile))) {
             final Status status = getSafetyModeStatus();
             String msg;
             if (status.isEnabled()) {
@@ -92,8 +93,8 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
             Slots slots = new Slots();
             slots.setMobile(cleanMobileNumber(mobile));
             return lexFullfillmentService.lexConfirmIntent(msg, MANAGE_SAFETY_STATUS, slots);
-        }else{
-            String msg = "Sorry number format seems not invalid. Please, insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
+        } else {
+            String msg = "Sorry " + MessageUtil.getRandomGreeting() + ", number format seems not invalid. Please, insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
             return lexFullfillmentService.lexElicitSlot(msg, "mobile", lexEvent.getCurrentIntent().getSlots(), MANAGE_SAFETY_STATUS);
         }
     }
@@ -111,7 +112,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
     }
 
     private LexResponse processConfirmationStatusDenied() throws IOException {
-        LexResponse lexResponse = lexFullfillmentService.lexCloseIntent("Ok.", FullfillmentState.FULFILLED);
+        LexResponse lexResponse = lexFullfillmentService.lexCloseIntent("Ok " + MessageUtil.getRandomGreeting() + ". Talk to you later", FullfillmentState.FULFILLED);
         return lexResponse;
 
     }
@@ -125,10 +126,10 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
         final Status receivedStatus = sendSafetyModeStatus(status);
         log.info("Retrieved status for safety: " + receivedStatus);
         if (receivedStatus.isEnabled()) {
-            msg = String.format("Safety mode has been set successfully.");
+            msg = "Safety mode has been set successfully " + MessageUtil.getRandomEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
         } else {
-            msg = String.format("Safety mode has not been set. Error is: " + receivedStatus.getMessage());
+            msg = "Sorry, some error occurred. Safety mode has not been set " + MessageUtil.getErrorEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
@@ -144,10 +145,10 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
         final Status receivedStatus = sendSafetyModeStatus(status);
         log.info("Retrieved status for safety: " + receivedStatus);
         if (!receivedStatus.isEnabled()) {
-            msg = String.format("Safety mode has been unset successfully.");
+            msg = "Safety mode has been unset successfully " + MessageUtil.getRandomEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
         } else {
-            msg = String.format("Safety mode has not been unset. Error is: " + receivedStatus.getMessage());
+            msg = "Sorry, some error occurred. Safety mode has not been set " + MessageUtil.getErrorEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
@@ -177,15 +178,15 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
         return parseResponse(JSONresponse, Status.class);
     }
 
-    private boolean isMobileValid(String mobile){
+    private boolean isMobileValid(String mobile) {
         String regex = "[0-9]+";
         boolean validity = mobile.matches(regex) && mobile.length() == 12;
-        log.info("checking mobile validity: "+mobile+" = "+validity);
+        log.info("checking mobile validity: " + mobile + " = " + validity);
         return validity;
     }
 
-    private String cleanMobileNumber(String mobile){
-        log.info("cleaning mobile number: "+mobile);
+    private String cleanMobileNumber(String mobile) {
+        log.info("cleaning mobile number: " + mobile);
         String result = mobile.replace("(", "");
         result = result.replace("(", "");
         result = result.replace(")", "");

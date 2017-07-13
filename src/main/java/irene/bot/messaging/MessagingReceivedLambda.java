@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 public class MessagingReceivedLambda implements RequestHandler<MessageProcessingInput, MessageProcessingResult> {
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessagingReceivedLambda.class);
+    private static final String MESSAGE = "message";
     private MessageProcessorService messageProcessorService = new MessageProcessorService();
 
     private String decode(String s) {
@@ -30,8 +31,14 @@ public class MessagingReceivedLambda implements RequestHandler<MessageProcessing
             log.debug("Received raw message from user " + decodedInput);
             Activity activity = gsonBuilder.create().fromJson(decodedInput, Activity.class);
             log.info("Received message from user " + activity);
-            String id = messageProcessorService.processMessage(activity);
-            messageProcessingResult = new MessageProcessingResult(true, id);
+
+            if (activity.getType().equals(MESSAGE)) {
+                String id = messageProcessorService.processMessage(activity);
+                messageProcessingResult = new MessageProcessingResult(true, id);
+            }else{
+                log.warn("Received message with unsupported type: "+activity.getType());
+                messageProcessingResult = new MessageProcessingResult(false, null);
+            }
         } catch (Exception e) {
             log.error(e);
             messageProcessingResult = new MessageProcessingResult(false, null);

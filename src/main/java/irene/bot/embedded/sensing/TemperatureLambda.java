@@ -7,6 +7,9 @@ import irene.bot.lex.model.FullfillmentState;
 import irene.bot.lex.model.LexEvent;
 import irene.bot.lex.model.LexResponse;
 import irene.bot.embedded.sensing.model.Temperature;
+import irene.bot.util.MessageUtil;
+
+import static irene.bot.util.MessageUtil.getErrorEmoji;
 
 public class TemperatureLambda extends AbstractEmbeddedClient implements RequestHandler<LexEvent, LexResponse> {
 
@@ -21,10 +24,10 @@ public class TemperatureLambda extends AbstractEmbeddedClient implements Request
             final String JSONresponse = embeddedEndpointGET(TEMPERATURE_PATH);
             final Temperature temperature = parseResponse(JSONresponse, Temperature.class);
             log.info("Retrieved temperature: " + temperature);
-            msg = String.format("Hey darling, temperature is %f Celsius degrees.", temperature.getTemperature());
+            msg = String.format("Hey "+ MessageUtil.getRandomGreeting()+", temperature is %.2f Celsius degrees.", temperature.getTemperature());
         } catch (Exception e) {
             log.error(e);
-            msg = "Sorry, I am unable to sense the temperature right now.";
+            msg = "Sorry, I am unable to sense the temperature right now "+getErrorEmoji();
         }
         return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
     }

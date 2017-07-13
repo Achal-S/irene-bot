@@ -38,17 +38,7 @@ public class MessageProcessorService {
         log.info("Processing message: " + activity.getText());
         final Map<String, String> sessionAttributes = this.buildSessionAttributesMap(activity.getChannelId(), activity.getConversation().getId(), activity.getFrom().getId(), activity.getFrom().getName(), activity.getServiceUrl());
         final String reply = lexMessagingService.sendToBot(activity.getText(), sessionAttributes);
-        final Stream<String> messages = Arrays.asList(reply.split("\n")).stream();
-        final List<String> ids = new ArrayList();
-        messages.forEach(m -> {
-            try {
-                ids.add(this.sendMessageToConversation(activity.getChannelId(), activity.getRecipient(), activity.getFrom(), activity.getServiceUrl(), m, activity.getConversation().getId()).getId());
-            }catch(Exception e){
-                log.error("Error processing message: "+m, e);
-            }
-        });
-        return ids.stream().map(s -> s.substring(0, 1))
-                .collect(Collectors.joining());
+        return this.sendMessageToConversation(activity.getChannelId(), activity.getRecipient(), activity.getFrom(), activity.getServiceUrl(), reply, activity.getConversation().getId()).getId();
     }
 
     private Map<String, String> buildSessionAttributesMap(String channel, String conversationId, String id, String name, String serviceUrl){

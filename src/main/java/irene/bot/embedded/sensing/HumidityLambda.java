@@ -7,6 +7,9 @@ import irene.bot.lex.model.FullfillmentState;
 import irene.bot.lex.model.LexEvent;
 import irene.bot.lex.model.LexResponse;
 import irene.bot.embedded.sensing.model.Humidity;
+import irene.bot.util.MessageUtil;
+
+import static irene.bot.util.MessageUtil.getErrorEmoji;
 
 public class HumidityLambda extends AbstractEmbeddedClient implements RequestHandler<LexEvent, LexResponse> {
 
@@ -21,10 +24,10 @@ public class HumidityLambda extends AbstractEmbeddedClient implements RequestHan
             final String JSONresponse = embeddedEndpointGET(HUMIDITY_PATH);
             final Humidity humidity = parseResponse(JSONresponse, Humidity.class);
             log.info("Retrieved humidity: " + humidity);
-            msg = String.format("Hey darling, humidity is %f.", humidity.getHumidity());
+            msg = String.format("Hey "+MessageUtil.getRandomGreeting()+", relative humidity is %.2f %%.", humidity.getHumidity());
         } catch (Exception e) {
             log.error(e);
-            msg = "Sorry, I am unable to sense the humidity right now.";
+            msg = "Sorry, I am unable to sense the humidity right now "+getErrorEmoji();
         }
         return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
     }

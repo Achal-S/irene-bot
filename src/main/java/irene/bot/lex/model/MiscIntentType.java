@@ -3,9 +3,17 @@ package irene.bot.lex.model;
 public enum MiscIntentType {
     //    None, Confirmed, or Denied
     HELP("Help"),
+    SKILLS("skills"),
+    CAPABILITIES("Capabilities"),
     CANCEL("Cancel"),
     STOP("Stop"),
-    GREETING("Greeting");
+    HOWAREYOU("HowAreYou"),
+    NAME("Name"),
+    REAL("Real"),
+    LOVE("Love"),
+    BYE("Bye"),
+    GREETING("Greeting"),
+    GENERIC("Generic");
 
     private String value;
 
