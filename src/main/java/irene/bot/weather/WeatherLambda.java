@@ -33,6 +33,8 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
     private static final String POSITION_PATH = "position";
     private static final String OPENWEATHER_API_KEY = "openweather.api.key";
     private static final int TIMEOUT = 10000;
+    private static final String OPENWEATHER_URL = "http://api.openweathermap.org/data/2.5/weather";
+    private static final String METEOGURU_URL = "http://www.meteoguru.com/en/pro/forecast/";
 
     private final String openWeatherApiKey = ApplicationPropertiesUtil.getProperty(OPENWEATHER_API_KEY, this.getClass());
 
@@ -59,8 +61,8 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
     }
 
 
-    private String buildForecastMessage(Forecasts forecasts){
-        StringBuilder stringBuilder = new StringBuilder();
+    private String buildForecastMessage(final Forecasts forecasts){
+        final StringBuilder stringBuilder = new StringBuilder();
 
         //General Description
         stringBuilder.append("Current weather for my position is: \"");
@@ -73,7 +75,7 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
         stringBuilder.append(String.format("wind speed is %.2f meter/sec with direction of %d meteorological degrees.\n", forecasts.getWind().getSpeed(), forecasts.getWind().getDeg()));
 
         //temp
-        stringBuilder.append(String.format("Temperature is [min/current/max] = [%.2f/%.2f/%.2f] Celsius degrees.\n",forecasts.getMain().getTempMin(),forecasts.getMain().getTemp(), forecasts.getMain().getTempMax()));
+        stringBuilder.append(String.format("Temperature is %.2f Celsius degrees.\n",forecasts.getMain().getTemp()));
 
         log.info("Built forecast message: "+stringBuilder.toString());
         return stringBuilder.toString();
@@ -91,11 +93,11 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
         try (CloseableHttpClient httpclient =
                      HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
 
-            HttpGet httpGet = new HttpGet(buildUrl(position.getLatitude(), position.getLongitude(), openWeatherApiKey));
+            final HttpGet httpGet = new HttpGet(buildUrl(position.getLatitude(), position.getLongitude(), openWeatherApiKey));
 
             httpResponse = httpclient.execute(httpGet);
-            HttpEntity entity = httpResponse.getEntity();
-            String stringResponse = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name());
+            final HttpEntity entity = httpResponse.getEntity();
+            final String stringResponse = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name());
 
             if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 log.error("Weather forecast GET endpoint invoked with status code: " + httpResponse.getStatusLine().getStatusCode());
@@ -112,13 +114,13 @@ public class WeatherLambda extends AbstractEmbeddedClient implements RequestHand
         }
     }
 
-    private String buildUrl(double latitude, double longitude, String apiKey){
-        String url =  "http://api.openweathermap.org/data/2.5/weather?units=metric&lat="+latitude+"&lon="+longitude+"&appid="+apiKey;
+    private String buildUrl(final double latitude, final double longitude, final String apiKey){
+        final String url =  OPENWEATHER_URL + "?units=metric&lat=" +latitude+"&lon="+longitude+"&appid="+apiKey;
         log.info("Requesting weather forecasts: "+url);
         return url;
     }
 
     private String getWeatherUrl(final Position position) {
-        return String.format("http://www.meteoguru.com/en/pro/forecast/?latlon=%s,%s", position.getLatitude(), position.getLongitude());
+        return String.format(METEOGURU_URL + "?latlon=%s,%s", position.getLatitude(), position.getLongitude());
     }
 }

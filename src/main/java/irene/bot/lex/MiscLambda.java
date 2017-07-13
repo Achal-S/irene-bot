@@ -43,7 +43,7 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
                 msg = "How can I help you, " + MessageUtil.getRandomGreeting() + "?";
                 break;
             case BYE:
-                msg = "Bye bye " + MessageUtil.getRandomGreeting() + " " + getRandomEmoji();
+                msg = "Bye bye " + MessageUtil.getRandomGreeting() + ". Don't forget the helmet!  " + getRandomEmoji();
                 break;
             case LOVE:
                 msg = "I love you! You are the only one that can turn me on " + getRandomEmoji();
