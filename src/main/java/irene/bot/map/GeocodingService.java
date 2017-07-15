@@ -2,9 +2,10 @@ package irene.bot.map;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
+import com.google.maps.PlacesApi;
+import com.google.maps.TextSearchRequest;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.GeocodingResult;
-import com.google.maps.model.LatLng;
+import com.google.maps.model.*;
 import irene.bot.map.model.GeocodingResponse;
 import irene.bot.map.model.ReverseGeocodingResponse;
 import irene.bot.util.ApplicationPropertiesUtil;
@@ -30,6 +31,14 @@ public class GeocodingService {
         final LatLng latLng = new LatLng(latitude, longitude);
         final GeocodingResult[] results = GeocodingApi.reverseGeocode(context, latLng).await();
         return results[0].formattedAddress;
+    }
+
+    public PlacesSearchResult getPlace(final double latitude, final double longitude) throws IOException, InterruptedException, ApiException {
+        final GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
+        TextSearchRequest textSearchRequest = PlacesApi.textSearchQuery(context, "motorbike mechanic");
+        LatLng latLng = new LatLng(latitude, longitude);
+        PlacesSearchResponse placesSearchResponse = textSearchRequest.location(latLng).rankby(RankBy.DISTANCE).radius(2000).await();
+        return placesSearchResponse.results[0];
     }
 
     public GeocodingResponse geoCode(final String address) {

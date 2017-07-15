@@ -126,7 +126,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
         final Status receivedStatus = sendSafetyModeStatus(status);
         log.info("Retrieved status for safety: " + receivedStatus);
         if (receivedStatus.isEnabled()) {
-            msg = "Safety mode has been set successfully " + MessageUtil.getRandomEmoji();
+            msg = "Safety mode has been set successfully (alarm is disabled) " + MessageUtil.getRandomEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
         } else {
             msg = "Sorry, some error occurred. Safety mode has not been set " + MessageUtil.getErrorEmoji();

@@ -24,7 +24,7 @@ public abstract class AbstractEmbeddedClient {
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AbstractEmbeddedClient.class);
     private static final String IRENE_EMBEDDED_URL_PROPERTY = "irene.embedded.url";
-    private static final int TIMEOUT = 10000;
+    private static final int TIMEOUT = 13000;
     private static final String APPLICATION_JSON = "application/json";
     private static final String CONTENT_TYPE = "Content-type";
 

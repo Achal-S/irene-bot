@@ -9,7 +9,6 @@ import irene.bot.lex.model.MiscIntentType;
 import irene.bot.util.MessageUtil;
 
 import static irene.bot.util.MessageUtil.getRandomEmoji;
-import static irene.bot.util.MessageUtil.getRandomGreeting;
 
 public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
 
@@ -28,7 +27,7 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
                 msg = "Ok, talk to you later " + MessageUtil.getRandomGreeting() + " " + getRandomEmoji();
                 break;
             case GREETING:
-                msg = "Hello " + MessageUtil.getRandomGreeting() +" "+ getRandomEmoji();
+                msg = "Hello " + MessageUtil.getRandomGreeting() + " " + getRandomEmoji();
                 break;
             case HOWAREYOU:
                 msg = "I am great " + MessageUtil.getRandomGreeting() + "! Let's go for a ride... " + getRandomEmoji();
@@ -43,13 +42,22 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
                 msg = "How can I help you, " + MessageUtil.getRandomGreeting() + "?";
                 break;
             case RIDE:
-                msg = "Let's go " + MessageUtil.getRandomGreeting() + ". Just don't forget the helmet "+MessageUtil.getRandomEmoji();
+                msg = "Let's go " + MessageUtil.getRandomGreeting() + ". Just don't forget the helmet " + MessageUtil.getRandomEmoji();
                 break;
             case THANKS:
-                msg = "You are wellcome " + MessageUtil.getRandomGreeting() + ". I am here to serve you "+MessageUtil.getRandomEmoji();
+                msg = "You are welcome " + MessageUtil.getRandomGreeting() + ". I am here to serve you " + MessageUtil.getRandomEmoji();
+                break;
+            case NAVIGATION:
+                msg = "Do you really think I am GPS navigator? Well, I am not. " + MessageUtil.getErrorEmoji();
+                break;
+            case AGE:
+                msg = "Never ask the age to a lady. " + MessageUtil.getErrorEmoji();
                 break;
             case BYE:
                 msg = "Bye bye " + MessageUtil.getRandomGreeting() + ". Don't forget the helmet!  " + getRandomEmoji();
+                break;
+            case FUEL:
+                msg = "Fuel is never enough... I love the smell of gasoline " + getRandomEmoji();
                 break;
             case LOVE:
                 msg = "I love you! You are the only one that can turn me on " + getRandomEmoji();
@@ -61,7 +69,7 @@ public class MiscLambda implements RequestHandler<LexEvent, LexResponse> {
                         "sensor readings like temperature, pressure and humidity (e.g., \"what is the temperature outside?\").\n" +
                         "I can set an alarm on the motorbike which will alert you if the bike is touched or moved (e.g., \"Please set the alarm\").\n" +
                         "Furthermore, I provide a safety mode (e.g., \"Please set the safety mode\") in which I can alert someone with a text in case of road accident.\n";// +
-                        //"Finally, I can help you troubleshoot the mechanical problems you may have on the motorbike (e.g., \"I have a problem, can you help me?\") "+ getRandomEmoji();
+                //"Finally, I can help you troubleshoot the mechanical problems you may have on the motorbike (e.g., \"I have a problem, can you help me?\") "+ getRandomEmoji();
                 break;
         }
         return lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);

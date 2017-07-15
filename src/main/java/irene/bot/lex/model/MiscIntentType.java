@@ -15,6 +15,9 @@ public enum MiscIntentType {
     RIDE("Ride"),
     GREETING("Greeting"),
     THANKS("Thanks"),
+    FUEL("Fuel"),
+    AGE("Age"),
+    NAVIGATION("Navigation"),
     GENERIC("Generic");
 
     private String value;

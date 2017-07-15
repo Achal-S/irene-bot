@@ -4,13 +4,13 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import irene.bot.embedded.AbstractEmbeddedClient;
 import irene.bot.embedded.model.Status;
+import irene.bot.embedded.sensing.model.Position;
 import irene.bot.lex.model.*;
 import irene.bot.util.ApplicationPropertiesUtil;
 import irene.bot.util.MessageUtil;
+import irene.bot.weather.WeatherService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static irene.bot.util.MessageUtil.getErrorEmoji;
 import static irene.bot.util.MessageUtil.getRandomEmoji;
@@ -19,11 +19,15 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(AlarmLambda.class);
     private static final String ALARM_PATH = "alarm";
+    private static final String POSITION_PATH = "position";
     private static final String ALARM_CALLBACK_PROPERTY = "alarm.notification.callback";
     private static final String MANAGE_ALARM_STATUS = "ManageAlarmStatus";
     private static final String DEFAULT_BACK_OFF_MESSAGE = "Hey! Back off";
     private static final String BACK_OFF_MESSAGE = "backOffMessage";
     private final String ALARM_CALLBACK_URL = ApplicationPropertiesUtil.getProperty(ALARM_CALLBACK_PROPERTY, this.getClass());
+
+    private final WeatherService weatherService = new WeatherService();
+
 
     @Override
     public LexResponse handleRequest(final LexEvent lexEvent, final Context context) {
@@ -44,13 +48,13 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
                     lexResponse = this.processConfirmationStatusDenied();
                     break;
                 default:
-                    msg = String.format("Sorry there has been a problem. Alarm has not been set/unset "+getErrorEmoji());
+                    msg = String.format("Sorry there has been a problem. Alarm has not been set/unset " + getErrorEmoji());
                     lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
             }
 
         } catch (Exception e) {
             log.error(e);
-            msg = String.format("Sorry, some error occurred. Alarm has not been set "+getErrorEmoji());
+            msg = String.format("Sorry, some error occurred. Alarm has not been set " + getErrorEmoji());
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
@@ -60,7 +64,7 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
     private LexResponse processConfirmationStatusNone(LexEvent lexEvent) throws IOException {
         Boolean desiredState = lexEvent.getCurrentIntent().getSlots().getDesiredState();
 
-        if(desiredState==null) {
+        if (desiredState == null) {
             final Slots slots = new Slots();
             String msg;
             final Status status = getAlarmStatus();
@@ -73,7 +77,7 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
             }
             slots.setBackOffMessage(DEFAULT_BACK_OFF_MESSAGE);
             return lexFullfillmentService.lexConfirmIntent(msg, MANAGE_ALARM_STATUS, slots);
-        }else{
+        } else {
             return this.turnAlarmOn(lexEvent);
         }
     }
@@ -96,7 +100,7 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
 
 
     private LexResponse processConfirmationStatusDenied() throws IOException {
-        LexResponse lexResponse = lexFullfillmentService.lexCloseIntent("Ok, "+ MessageUtil.getRandomGreeting()+". Talk to you later "+getRandomEmoji(), FullfillmentState.FULFILLED);
+        LexResponse lexResponse = lexFullfillmentService.lexCloseIntent("Ok, " + MessageUtil.getRandomGreeting() + ". Talk to you later " + getRandomEmoji(), FullfillmentState.FULFILLED);
         return lexResponse;
 
     }
@@ -111,15 +115,20 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
         final Status receivedStatus = sendAlarmStatus(status);
         log.info("Retrieved status for alarm: " + receivedStatus);
         if (receivedStatus.isEnabled()) {
-            msg = "Alarm has been set successfully "+ MessageUtil.getRandomEmoji();;
+            msg = "Alarm has been set successfully (safety mode is disabled). If I am not indoor, check the weather " + MessageUtil.getRandomGreeting() + " " + MessageUtil.getRandomEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
         } else {
-            msg = "There has been an error. Alarm has not been set "+getErrorEmoji();
+            msg = "There has been an error. Alarm has not been set " + getErrorEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
     }
 
+    private String getWeatherUrl() throws IOException {
+        final String JSONresponse = embeddedEndpointGET(POSITION_PATH);
+        final Position position = parseResponse(JSONresponse, Position.class);
+        return weatherService.getWeatherUrl(position);
+    }
 
     private LexResponse turnAlarmOff(LexEvent lexEvent) throws IOException {
         final Status status = buildStatusObject(lexEvent.getSessionAttributes());
@@ -130,10 +139,11 @@ public class AlarmLambda extends AbstractEmbeddedClient implements RequestHandle
         final Status receivedStatus = sendAlarmStatus(status);
         log.info("Retrieved status for alarm: " + receivedStatus);
         if (!receivedStatus.isEnabled()) {
-            msg = "Alarm has been unset successfully "+ MessageUtil.getRandomEmoji();
+
+            msg = "Alarm has been unset successfully. Remember to check the weather: " + this.getWeatherUrl() + " " + MessageUtil.getRandomEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FULFILLED);
         } else {
-            msg = "There has been an error. Alarm has not been set "+getErrorEmoji();
+            msg = "There has been an error. Alarm has not been set " + getErrorEmoji();
             lexResponse = lexFullfillmentService.lexCloseIntent(msg, FullfillmentState.FAILED);
         }
         return lexResponse;
