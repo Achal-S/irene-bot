@@ -85,9 +85,4 @@ public class TextingService {
             }
         }
     }
-
-//    public static void main(String[] args) throws Exception {
-//        TextingService textingService = new TextingService();
-//        textingService.sendTextNotification("this is a test", "393454132959");
-//    }
 }

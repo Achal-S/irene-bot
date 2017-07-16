@@ -22,7 +22,7 @@ public class WeatherService extends AbstractEmbeddedClient {
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(WeatherLambda.class);
     private static final String OPENWEATHER_API_KEY = "openweather.api.key";
-    private static final int TIMEOUT = 10000;
+    private static final int TIMEOUT = 13000;
     private static final String OPENWEATHER_URL = "http://api.openweathermap.org/data/2.5/weather";
     private static final String METEOGURU_URL = "http://www.meteoguru.com/en/pro/forecast/";
 
