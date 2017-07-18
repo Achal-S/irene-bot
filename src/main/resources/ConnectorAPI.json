@@ -808,7 +808,16 @@
         "relatesTo": {
           "$ref": "#/definitions/ConversationReference",
           "description": "Reference to another conversation or activity"
+        },
+        "inputHint": {
+          "description": "Indicates whether the bot is accepting, expecting, or ignoring input",
+          "type": "string"
+        },
+        "suggestedActions": {
+          "$ref": "#/definitions/SuggestedActions",
+          "description": "SuggestedActions are used to provide keyboard/quickreply like behavior in many clients"
         }
+
       }
     },
     "Object": {
@@ -850,11 +859,14 @@
           "type": "string"
         },
         "value": {
-          "$ref": "#/definitions/Object",
+          "type": "string",
           "description": "Supplementary parameter for action. Content of this property depends on the ActionType"
         }
       }
     },
+
+
+
     "Attachment": {
       "description": "An attachment within an activity",
       "type": "object",
@@ -1002,6 +1014,26 @@
         "tap": {
           "$ref": "#/definitions/CardAction",
           "description": "This action will be activated when user taps on the card itself"
+        }
+      }
+    },
+    "SuggestedActions": {
+      "description": "SuggestedActions that can be performed",
+      "type": "object",
+      "properties": {
+        "to": {
+          "description": "Ids of the recipients that the actions should be shown to.  These Ids are relative to the channelId and a subset of all recipients of the activity",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "actions": {
+          "description": "Actions that can be shown to the user",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CardAction"
+          }
         }
       }
     },

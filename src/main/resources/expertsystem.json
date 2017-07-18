@@ -38,8 +38,7 @@
             "Rocker arm seizure",
             "Cylinder, piston seizure",
             "Crankshaft seizure",
-            "Connecting rod small end seizure",
-            "Connecting rod big end seizure",
+            "Connecting rod big/small end seizure",
             "Transmission gear or bearing seizure",
             "Camshaft seizure"
           ]
@@ -51,9 +50,7 @@
           "outcomes": [
             "Fuel tap vacuum hose clogged",
             "Fuel tank air vent obstructed",
-            "Fuel tap clogged",
-            "Fuel line clogged",
-            "Float valve clogged"
+            "Fuel tap, line or valve clogged"
           ]
         },
         {
@@ -62,8 +59,7 @@
           "confirmation": true,
           "outcomes": [
             "Fuel level in carburetor float bowl too high",
-            "Float valve worn or stuck open",
-            "Starting technique faulty. (When flooded, crank the engine with the throttle fully open to allow more air to reach the engine.)"
+            "Float valve worn or stuck open"
           ]
         },
         {
@@ -75,11 +71,9 @@
             "Spark plug dirty, broken, or maladjusted",
             "Spark plug cap or high tension wiring trouble",
             "Spark plug cap not in good contact",
-            "Spark plug incorrect",
             "IC igniter trouble",
             "Neutral, starter lockout, or side stand switch trouble",
-            "Pickup coil trouble",
-            "Ignition coil trouble",
+            "Pickup or ignition coil trouble",
             "Ignition or engine stop switch shorted",
             "Wiring shorted or open",
             "Main fuse blown"
@@ -94,12 +88,11 @@
             "Cylinder head not sufficiently tightened down",
             "No valve clearance",
             "Cylinder, piston worn",
-            "Piston ring bad (worn, weak broken, or sticking)",
+            "Piston ring worn, weak broken, or sticking",
             "Piston ring/land clearance excessive",
-            "Cylinder head gasket damaged",
-            "Cylinder head warped",
+            "Cylinder head gasket damaged or warped",
             "Valve spring broken or weak",
-            "Valve not seating properly (valve bent, worn, or carbon accumulation on the seating surface)"
+            "Valve not seating properly"
           ]
         }
       ]
@@ -118,10 +111,8 @@
             "Spark plug dirty, broken, or maladjusted",
             "Spark plug cap or high tension wiring trouble",
             "Spark Plug cap shorted or not in good contact",
-            "Spark plug incorrect",
             "IC igniter trouble",
-            "Pickup coil trouble",
-            "Ignition coil trouble"
+            "Pickup or ignition coil trouble"
           ]
         },
         {
@@ -137,8 +128,7 @@
             "Starter plunger stuck open",
             "Fuel level in carburetor float bowl too high or too low",
             "Fuel tank air vent obstructed",
-            "Carburetor holder loose",
-            "Air cleaner duct loose"
+            "Carburetor holder or air cleaner duct loose"
           ]
         },
         {
@@ -150,12 +140,9 @@
             "Cylinder head not sufficiently tightened down",
             "No valve clearance",
             "Cylinder, piston worn",
-            "Piston ring bad (worn, weak, broken, or sticking)",
-            "Piston ring/land clearance excessive",
-            "Cylinder head warped",
+            "Piston ring bad or clearance excessive",
             "Cylinder head gasket damaged",
             "Valve spring broken or weak",
-            "Valve not seating properly (valve bent, worn, or carbon accumulation on the seating surface)",
             "IC igniter trouble",
             "Carburetors not synchronizing",
             "Vacuum piston doesn’t slide smoothly",
@@ -180,8 +167,7 @@
             "Spark plug cap shorted or not in good contact",
             "Spark plug incorrect",
             "IC igniter trouble",
-            "Pickup coil trouble",
-            "Ignition coil trouble"
+            "Pickup or ignition coil trouble"
           ]
         },
         {
@@ -200,8 +186,7 @@
             "Water of foreign matter in fuel",
             "Carburetor holder loose",
             "Fuel tank air vent obstructed",
-            "Fuel tap clogged",
-            "Fuel line clogged"
+            "Fuel tap or line clogged"
           ]
         },
         {
@@ -213,12 +198,12 @@
             "Cylinder head not.sufficiently tightened down",
             "No valve clearance",
             "Cylinder, piston worn",
-            "Piston ring bad (worn, weak, broken, or sticking)",
+            "Piston ring worn, weak, broken, or sticking",
             "Piston ring/land clearance excessive",
             "Cylinder head gasket damaged",
             "Cylinder head warped",
             "Valve spring broken or weak",
-            "Valve not seating properly (valve bent, worn, or carbon accumulation on the seating surface.)"
+            "Valve not seating properly"
           ]
         },
         {
@@ -312,8 +297,7 @@
             "Fan relay trouble",
             "Fan motor broken",
             "Fan blade damaged",
-            "Water pump not turning",
-            "Water pump impeller damaged"
+            "Water pump not turning or impeller damaged"
           ]
         }
       ]
@@ -453,8 +437,7 @@
           "question": "Do you hear any other kind of noise?",
           "confirmation": true,
           "outcomes": [
-            "Connecting rod small end clearance excessive",
-            "Connecting rod big end clearance excessive",
+            "Connecting rod big/small end clearance excessive",
             "Piston ring worn, broken or stuck",
             "Piston seizure, damage",
             "Cylinder head gasket leaking",
@@ -462,8 +445,7 @@
             "Cran kshaft runout excessive",
             "Engine mounts loose",
             "Crankshaft bearing worn",
-            "Camshaft chain tensioner trouble",
-            "Camshaft chain, sprocket, guide worn"
+            "Camshaft chain, tensioner, sprocket or guide worn"
           ]
         }
       ]

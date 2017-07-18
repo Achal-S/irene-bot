@@ -5,10 +5,7 @@ import com.squareup.okhttp.Request;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
 import io.swagger.client.api.ConversationsApi;
-import io.swagger.client.model.Activity;
-import io.swagger.client.model.ChannelAccount;
-import io.swagger.client.model.ConversationAccount;
-import io.swagger.client.model.ResourceResponse;
+import io.swagger.client.model.*;
 import irene.bot.lex.LexMessagingService;
 import irene.bot.messaging.model.AuthenticationResponse;
 import org.joda.time.DateTime;
@@ -56,6 +53,7 @@ public class MessageProcessorService {
         echo.setFrom(fromAccount);
         echo.setType(MESSAGE);
         echo.setText(text);
+//        echo.setTextFormat("markdown");
         echo.setRecipient(toAccount);
         echo.setChannelId(channelId);
 
@@ -67,6 +65,28 @@ public class MessageProcessorService {
 
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter()).create();
+
+//        SuggestedActions suggestedActions = new SuggestedActions();
+//
+//        CardAction yes = new CardAction();
+//        yes.setValue("yes");
+//        yes.setTitle("yes");
+//        yes.setType("imBack");
+//
+//        CardAction no = new CardAction();
+//        no.setValue("no");
+//        no.setTitle("no");
+//        no.setType("imBack");
+//        suggestedActions.addActionsItem(yes);
+//        suggestedActions.addActionsItem(no);
+//
+//        if(text.startsWith("@boolean@")){
+//            echo.setText(text.replace("@boolean@", ""));
+//            echo.setSuggestedActions(suggestedActions);
+//            echo.setInputHint("expectingInput");
+//        }else{
+//            echo.setText(text);
+//        }
         return conversationsApi.conversationsSendToConversation(echo, conversationId);
     }
 

@@ -73,7 +73,7 @@ public class ExpertSystemLambda extends AbstractEmbeddedClient implements Reques
 
     private LexResponse handleNoneConfirmationStatus(LexEvent lexEvent, KnowledgeBase knowledgeBase) {
         log.info("Processing None confirmation status of Expert system");
-        String msg = "It seems you have a problem with the vehicle, may be I can help. Let me ask you some questions to diagnose the problem.\n";
+        String msg = "It seems you have a problem with the vehicle....Let me ask you some questions to diagnose the problem.\n\r";
         Slots slots = lexEvent.getCurrentIntent().getSlots();
         LexResponse lexResponse;
         try {
@@ -89,8 +89,13 @@ public class ExpertSystemLambda extends AbstractEmbeddedClient implements Reques
 
 
     private String buildOutcomesReply(final Secondary secondary) {
-        final StringBuilder stringBuilder = new StringBuilder("Ok, I think I have some hints now....\nBased on my knowledge the possible problem ranked by likelyhood are:\n");
-        secondary.getOutcomes().stream().forEach(o -> stringBuilder.append(o + "\n"));
+        final StringBuilder stringBuilder = new StringBuilder("Ok "+MessageUtil.getRandomGreeting()+", based on my knowledge and your answers the potential problems ranked by likelyhood are:\n\r");
+        secondary.getOutcomes().stream().forEach(o -> stringBuilder.append("-> " +o + "\n\r"));
+        try{
+            stringBuilder.append("\n\r"+this.getClosestMechanicMessage());
+        }catch(Exception e){
+            log.error(e);
+        }
         return stringBuilder.toString();
     }
 
@@ -109,34 +114,20 @@ public class ExpertSystemLambda extends AbstractEmbeddedClient implements Reques
     private LexResponse handleConfirmationStatusConfirmed(LexEvent lexEvent, KnowledgeBase knowledgeBase) {
         log.info("Processing Confirmed status of Expert system");
         Slots slots = lexEvent.getCurrentIntent().getSlots();
-        Integer primaryIndex = slots.getPrimaryQuestion();
-        Integer secondaryIndex = slots.getSecondaryQuestion();
         LexResponse lexResponse;
         Question currentQuestion = this.getCurrentQuestion(slots, knowledgeBase);
-
 
         if (!currentQuestion.isPrimary() && currentQuestion.isConfirmation()) {
             lexResponse = lexFullfillmentService.lexCloseIntent(buildOutcomesReply(((Secondary) currentQuestion)), FullfillmentState.FULFILLED);
         } else {
             try {
-                Question question;
-                if (currentQuestion.isPrimary()) {
-                    question = knowledgeBase.getNextQuestion(primaryIndex, secondaryIndex, !currentQuestion.isConfirmation());
-                } else {
-                    question = knowledgeBase.getNextQuestion(primaryIndex, secondaryIndex, false);
-                }
-
+                Question question = this.getNextQuestion(slots, knowledgeBase, !currentQuestion.isConfirmation());
                 pupulateSlotsFromQuestion(slots, question);
                 lexResponse = lexFullfillmentService.lexConfirmIntent(question.getQuestion(), EXPERT_SYSTEM_INTENT, slots);
             } catch (Exception e) {
                 log.error(e);
                 try {
-                    String positionJSON = this.embeddedEndpointGET(POSITION_PATH);
-                    final Position position = parseResponse(positionJSON, Position.class);
-                    PlacesSearchResult placesSearchResult = this.geocodingService.getPlace(MECHANIC_QUERY, position.getLatitude(), position.getLongitude()).results[0];
-                    String mapUrl = geocodingService.getMapURL(placesSearchResult.geometry.location.lat, placesSearchResult.geometry.location.lng);
-                    lexResponse = lexFullfillmentService.lexCloseIntent("Sorry, This time it seems I cannot help you. The closest mechanic is:  " + placesSearchResult.name + " Check it out on map: " + mapUrl, FullfillmentState.FAILED);
-
+                    lexResponse = lexFullfillmentService.lexCloseIntent("Sorry, I cannot help you. "+getClosestMechanicMessage(), FullfillmentState.FAILED);
                 } catch (Exception e1) {
                     log.error(e1);
                     lexResponse = lexFullfillmentService.lexCloseIntent("Sorry, This time it seems I cannot help you. " + MessageUtil.getErrorEmoji(), FullfillmentState.FAILED);
@@ -146,11 +137,22 @@ public class ExpertSystemLambda extends AbstractEmbeddedClient implements Reques
         return lexResponse;
     }
 
+    private Question getNextQuestion(Slots slots, KnowledgeBase knowledgeBase, boolean skipToPrimary) throws Exception{
+        Integer primaryIndex = slots.getPrimaryQuestion();
+        Integer secondaryIndex = slots.getSecondaryQuestion();
+        Question currentQuestion = this.getCurrentQuestion(slots, knowledgeBase);
+        Question nextQuestion;
+        if (currentQuestion.isPrimary()) {
+            nextQuestion = knowledgeBase.getNextQuestion(primaryIndex, secondaryIndex, skipToPrimary);
+        } else {
+            nextQuestion = knowledgeBase.getNextQuestion(primaryIndex, secondaryIndex, false);
+        }
+        return nextQuestion;
+    }
+
     private LexResponse handleConfirmationStatusDenied(LexEvent lexEvent, KnowledgeBase knowledgeBase) {
         log.info("Processing Confirmed status of Expert system");
         Slots slots = lexEvent.getCurrentIntent().getSlots();
-        Integer primaryIndex = slots.getPrimaryQuestion();
-        Integer secondaryIndex = slots.getSecondaryQuestion();
         LexResponse lexResponse;
         Question currentQuestion = this.getCurrentQuestion(slots, knowledgeBase);
 
@@ -159,23 +161,13 @@ public class ExpertSystemLambda extends AbstractEmbeddedClient implements Reques
         } else {
 
             try {
-                Question question;
-                if (currentQuestion.isPrimary()) {
-                    question = knowledgeBase.getNextQuestion(primaryIndex, secondaryIndex, currentQuestion.isConfirmation());
-                } else {
-                    question = knowledgeBase.getNextQuestion(primaryIndex, secondaryIndex, false);
-                }
+                Question question = this.getNextQuestion(slots, knowledgeBase, currentQuestion.isConfirmation());
                 pupulateSlotsFromQuestion(slots, question);
                 lexResponse = lexFullfillmentService.lexConfirmIntent(question.getQuestion(), EXPERT_SYSTEM_INTENT, slots);
             } catch (Exception e) {
                 log.error(e);
                 try {
-                    String positionJSON = this.embeddedEndpointGET(POSITION_PATH);
-                    final Position position = parseResponse(positionJSON, Position.class);
-                    PlacesSearchResult placesSearchResult = this.geocodingService.getPlace(MECHANIC_QUERY, position.getLatitude(), position.getLongitude()).results[0];
-                    String mapUrl = geocodingService.getMapURL(placesSearchResult.geometry.location.lat, placesSearchResult.geometry.location.lng);
-                    lexResponse = lexFullfillmentService.lexCloseIntent("Sorry, I cannot help you. The closest mechanic to you is:  \"" + placesSearchResult.name + "\" Check it out on map: " + mapUrl, FullfillmentState.FAILED);
-
+                    lexResponse = lexFullfillmentService.lexCloseIntent("Sorry, I cannot help you. "+getClosestMechanicMessage(), FullfillmentState.FAILED);
                 } catch (Exception e1) {
                     log.error(e);
                     lexResponse = lexFullfillmentService.lexCloseIntent("Error", FullfillmentState.FAILED);
@@ -185,8 +177,16 @@ public class ExpertSystemLambda extends AbstractEmbeddedClient implements Reques
         return lexResponse;
     }
 
+    private String getClosestMechanicMessage() throws Exception{
+        String positionJSON = this.embeddedEndpointGET(POSITION_PATH);
+        final Position position = parseResponse(positionJSON, Position.class);
+        PlacesSearchResult placesSearchResult = this.geocodingService.getPlace(MECHANIC_QUERY, position.getLatitude(), position.getLongitude()).results[0];
+        String mapUrl = geocodingService.getMapURL(placesSearchResult.geometry.location.lat, placesSearchResult.geometry.location.lng);
+        return "The closest mechanic to you is:  \"" + placesSearchResult.name + "\" Check it out on map: " + mapUrl;
+    }
 
-    private KnowledgeBase parseKnowledgeBase(String knowledgeBaseString) {
+
+    private KnowledgeBase parseKnowledgeBase(final String knowledgeBaseString) {
         Gson gson = new Gson();
         return gson.fromJson(knowledgeBaseString, KnowledgeBase.class);
     }

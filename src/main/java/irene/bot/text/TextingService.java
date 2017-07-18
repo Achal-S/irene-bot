@@ -8,12 +8,14 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,6 @@ public class TextingService {
     private static final String CHARSET = "charset";
     private static final String SENDER_NAME = "Irene";
     private static final String SEND_SMS_CLASSIC = "send_sms_classic";
-//    private static final String SEND_SMS_CLASSIC = "test_send_sms_classic";
     private static final String RECIPIENTS = "recipients[]";
     private static final String SKEBBY_USERNAME_PROPERTY = "skebby.username";
     private static final String SKEBBY_PASSWORD_PROPERTY = "skebby.password";
@@ -40,7 +41,6 @@ public class TextingService {
     private final String SKEBBY_PWD = ApplicationPropertiesUtil.getProperty(SKEBBY_PASSWORD_PROPERTY, this.getClass());
 
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TextingService.class);
-
 
     public String sendTextNotification(final String message, final String... recipients) throws IOException {
         CloseableHttpResponse httpResponse = null;
@@ -58,27 +58,31 @@ public class TextingService {
             formParams.add(new BasicNameValuePair(TEXT, message));
             formParams.add(new BasicNameValuePair(CHARSET, StandardCharsets.UTF_8.name()));
 
-            for (String recipient : recipients) {
-                formParams.add(new BasicNameValuePair(RECIPIENTS, recipient));
-                log.info("Sending text notification to number: " + recipient);
+            if(recipients!=null && recipients.length>0) {
+                for (String recipient : recipients) {
+                    formParams.add(new BasicNameValuePair(RECIPIENTS, recipient));
+                    log.info("Sending text notification to number: " + recipient);
+                }
+
+                HttpPost httpPost = new HttpPost(endpoint);
+
+                httpPost.setEntity(new UrlEncodedFormEntity(formParams, StandardCharsets.UTF_8.name()));
+                httpResponse = httpclient.execute(httpPost);
+
+                log.info("Response from SMS provider with status code: " + httpResponse.getStatusLine().getStatusCode());
+                HttpEntity entity = httpResponse.getEntity();
+                String stringResponse = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name());
+
+                EntityUtils.consume(entity);
+
+                if (stringResponse.contains(STATUS_SUCCESS)) {
+                    log.info("Successful response from SMS provider: " + stringResponse);
+                } else {
+                    log.error("Error from SMS provider: " + stringResponse);
+                }
+                return stringResponse;
             }
-
-            HttpPost httpPost = new HttpPost(endpoint);
-            httpPost.setEntity(new UrlEncodedFormEntity(formParams, StandardCharsets.UTF_8.name()));
-            httpResponse = httpclient.execute(httpPost);
-
-            log.info("Response from SMS provider with status code: " + httpResponse.getStatusLine().getStatusCode());
-            HttpEntity entity = httpResponse.getEntity();
-            String stringResponse = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name());
-
-            EntityUtils.consume(entity);
-
-            if (stringResponse.contains(STATUS_SUCCESS)) {
-                log.info("Successful response from SMS provider: " + stringResponse);
-            } else {
-                log.error("Error from SMS provider: " + stringResponse);
-            }
-            return stringResponse;
+            return "";
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();

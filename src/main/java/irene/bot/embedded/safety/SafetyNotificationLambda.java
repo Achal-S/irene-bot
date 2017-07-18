@@ -36,7 +36,7 @@ public class SafetyNotificationLambda extends AbstractNotificationLambda impleme
 
             if (position.isSuccess()) {
                 final String mapUrl = getMapUrl(position);
-                String msg = String.format("Hi, I am Irene the motorbike bot. The bike seems to be on the ground at these coordinates: [%f, %f]. Check them out on a map: %s", position.getLatitude(), position.getLongitude(), mapUrl);
+                String msg = String.format("Hi I am Irene, the bike is on the ground. Check the map: "+ mapUrl);
                 String textResult =  textingService.sendTextNotification(msg, status.getTextNotification());
                 sendMessage(status);
                 return textResult;
@@ -63,7 +63,7 @@ public class SafetyNotificationLambda extends AbstractNotificationLambda impleme
         log.info("Sending message to id: "+this.getIdFromChannel(status.getChannel()));
         log.info("Sending message to name: "+this.getUserNameFromChannel(status.getChannel()));
 
-        ResourceResponse resourceResponse = messageProcessorService.sendMessageToConversation(status.getChannel(), fromAccount, toAccount, status.getServiceUrl(), "Hey! Safety mode has been triggered, I have sent a text message to: " + status.getTextNotification() + " Don't scare me, I hope everything is fine", status.getConversationId());
+        ResourceResponse resourceResponse = messageProcessorService.sendMessageToConversation(status.getChannel(), fromAccount, toAccount, status.getServiceUrl(), "Hey! Safety mode has been triggered, I have sent a text message to: " + status.getTextNotification() + " Don't scare me, I hope everything is fine. (Safety mode is now disabled, re-enable it if necessary).", status.getConversationId());
         return resourceResponse.getId();
     }
 

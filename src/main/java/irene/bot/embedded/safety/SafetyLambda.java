@@ -22,7 +22,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
 
     @Override
     public LexResponse handleRequest(final LexEvent lexEvent, final Context context) {
-        log.info(String.format("IntentTT %s triggered with confirmation %s", lexEvent.getCurrentIntent().getName(), lexEvent.getCurrentIntent().getConfirmationStatus()));
+        log.info(String.format("Intent %s triggered with confirmation %s", lexEvent.getCurrentIntent().getName(), lexEvent.getCurrentIntent().getConfirmationStatus()));
         log.info("Current invocation source is: " + lexEvent.getInvocationSource());
         LexResponse lexResponse;
 
@@ -88,7 +88,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
     }
 
     private LexResponse retrieveMobileSlot(String incipitMsg, Slots slots) throws IOException {
-        String msg = incipitMsg + "Please, " + MessageUtil.getRandomGreeting() + " insert a mobile number with international prefix without plus or dash (e.g., 013282073345) to send text notifications";
+        String msg = incipitMsg + "Please, " + MessageUtil.getRandomGreeting() + " insert a mobile number with international prefix without plus or dash (e.g., 15705598299 for U.S.) to send text notifications.";
         return lexFullfillmentService.lexElicitSlot(msg, "mobile", slots, MANAGE_SAFETY_STATUS);
     }
 
@@ -195,7 +195,7 @@ public class SafetyLambda extends AbstractEmbeddedClient implements RequestHandl
             return false;
         } else {
             String regex = "[0-9]+";
-            boolean validity = mobile.matches(regex) && mobile.length() == 12;
+            boolean validity = mobile.matches(regex) && mobile.length() >= 11 && mobile.length() <= 12;
             log.info("checking mobile validity: " + mobile + " = " + validity);
             return validity;
         }
